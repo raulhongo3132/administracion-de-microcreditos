@@ -1,4 +1,4 @@
-# 📌 Plan de Negocios – Sistema de Administración de Microcréditos
+# Plan de Negocios – Sistema de Administración de Microcréditos
 ## 1. Resumen Ejecutivo
 
 Objetivo: Desarrollar una aplicación web para que los cobradores de microcréditos registren pagos, consulten saldos y generen reportes en tiempo real para el administrador principal.
