@@ -8,7 +8,7 @@ Este documento explica cómo preparar tu entorno de desarrollo para trabajar con
 
 Git es un sistema de control de versiones que permite gestionar el código fuente.
 
-# En Windows
+### En Windows
 
 1. Descarga Git desde [https://git-scm.com/download/win](https://git-scm.com/download/win)
 2. Ejecuta el instalador y sigue los pasos por defecto.
@@ -18,14 +18,14 @@ Git es un sistema de control de versiones que permite gestionar el código fuent
    git --version
    ```
 
-# En MacOs
+### En MacOs
 
    ```bash
    brew install git
    git --version
    ```
 
-# En Linux
+### En Linux
 
    ```bash
    sudo apt update
