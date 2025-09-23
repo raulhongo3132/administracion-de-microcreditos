@@ -76,7 +76,7 @@ Product Owner (PO): Define requerimientos de cobradores y administrador. - Rene 
 
 Project Manager (PM): Planifica actividades y hace seguimiento. - Raúl Valverde.
 
-Front-End (FE): Diseña dashboards para cobradores y administrador. - Fernanda Iglesias / Gustavo .
+Front-End (FE): Diseña dashboards para cobradores y administrador. - Fernanda Iglesias / Gustavo Granados.
 
 Back-End (BE): Implementa API de cobranza y reportes. - Rebeca Gómez.
 
