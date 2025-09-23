@@ -1,3 +1,4 @@
+
 # Plan de Negocios – Sistema de Administración de Microcréditos
 ## 1. Resumen Ejecutivo
 
