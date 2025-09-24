@@ -1,0 +1,1 @@
+# Inicializa Flask, conexión a BD (db.py), registra rutas

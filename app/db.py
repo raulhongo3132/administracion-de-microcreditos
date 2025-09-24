@@ -1,0 +1,1 @@
+# Conexión a PostgreSQL o pool (exporta `db`)

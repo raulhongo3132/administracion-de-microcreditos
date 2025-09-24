@@ -80,7 +80,7 @@ Front-End (FE): Diseña dashboards para cobradores y administrador. - Fernanda I
 
 Back-End (BE): Implementa API de cobranza y reportes. - Rebeca Gómez.
 
-DBA: Diseña tablas de clientes, créditos, pagos y genera vistas para reportes. - Alfredo Esquivel.
+DBA: Diseña tablas de clientes, créditos, pagos y genera vistas para reportes. - Alfredo Esquivel. 
 
 ## 7. Plan de Trabajo (tentativo)
 - 1-2	  Diseño BD + mockups dashboard	  DBA + FE
