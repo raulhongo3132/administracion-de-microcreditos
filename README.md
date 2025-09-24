@@ -92,3 +92,4 @@ DBA: Diseña tablas de clientes, créditos, pagos y genera vistas para reportes.
 ## -- Notas --
 - Para el PO, DBA y BE: [Link al google sheets del cliente](https://docs.google.com/spreadsheets/d/1zv5CVmtzXvHYGdaY3UP40fK2whJVYFIGNw84OHz_w0c/edit?usp=sharing).
 - Guía de instalación y configuración del proyecto [Link](https://github.com/raulhongo3132/administracion-de-microcreditos/blob/main/primeros_pasos.md).
+- Lista de tareas y diagramas [Link a sheets](https://docs.google.com/spreadsheets/d/1otMOkEbiK9ZjKtjpQzz7Nzl1j3uJB0RvwW3Z7_zzNr4/edit?usp=sharing).
