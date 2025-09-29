@@ -14,7 +14,9 @@ Aplicación web para la **gestión de microcréditos**, diseñada para que cobra
 ## 📂 Estructura del proyecto
 
 backend/ → API REST con Flask
+
 frontend/ → Interfaces en HTML+CSS+JS
+
 docs/ → Documentación de negocio, arquitectura y diseño
 
 
@@ -24,8 +26,8 @@ docs/ → Documentación de negocio, arquitectura y diseño
 
 ### 1. Clonar el repositorio
 ```bash
-git clone https://github.com/tu-org/microcredit-app.git
-cd microcredit-app
+git clone https://github.com/raulhongo3132/administracion-de-microcreditos.git
+cd administracion-de-microcreditos
 ```
 
 ### 2. Backend
