@@ -1,95 +1,111 @@
+# 💳 Microcredit App
 
-# Plan de Negocios – Sistema de Administración de Microcréditos
-## 1. Resumen Ejecutivo
+Aplicación web para la **gestión de microcréditos**, diseñada para que cobradores registren pagos y el administrador principal pueda consultar reportes y controlar la cartera en tiempo real.  
 
-Objetivo: Desarrollar una aplicación web para que los cobradores de microcréditos registren pagos, consulten saldos y generen reportes en tiempo real para el administrador principal.
+## 🚀 Stack Tecnológico
 
-Usuarios clave:
-- Cobradores: capturan pagos y actualizan información.
-- Administrador principal: consulta reportes y controla cartera de créditos.
+- **Frontend:** HTML, CSS, JavaScript  
+- **Backend:** Python (Flask, con virtualenv)  
+- **Base de Datos:** PostgreSQL  
+- **Diseño UI:** Figma  
 
-Propuesta de Valor:
-- Centralizar y digitalizar la información de los cobros.
-- Reducir errores y fraudes en el manejo de dinero.
-- Mejorar la rendición de cuentas y la transparencia.
-- Mejorar la accesibilidad a los cobradores y administrador.
+---
 
-## 2. Análisis del Mercado
+## 📂 Estructura del proyecto
 
-Problema actual:
- - Registros manuales en libretas o hojas de cálculo.
- - Dificultad para verificar pagos y saldos reales.
- - Reportes tardados y poco confiables.
+backend/ → API REST con Flask
+frontend/ → Interfaces en HTML+CSS+JS
+docs/ → Documentación de negocio, arquitectura y diseño
 
-Oportunidad:
-- Digitalizar el proceso de cobranza.
-- Facilitar control diario de ingresos y adeudos.
-- Automatizar reportes para el administrador.
 
-## 3. Modelo de Uso
+---
 
-No es un sistema abierto al público.
+## 🔧 Instalación y primeros pasos
 
-Clientes internos: personal de cobranza y administrador principal.
+### 1. Clonar el repositorio
+```bash
+git clone https://github.com/tu-org/microcredit-app.git
+cd microcredit-app
+```
 
-Beneficios esperados:
+### 2. Backend
 
-- Trazabilidad de cada pago.
-- Control centralizado de cuentas.
-- Reducción de tiempos en conciliación de dinero.
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate   # En Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
 
-## 4. Propuesta de Solución
+### 3. Configuración de variables de entorno
 
-Funcionalidades clave:
-- Registro de usuarios cobradores.
-- Asignación de cartera de créditos a cada cobrador.
-- Registro de pagos por cliente.
-- Consulta de historial de pagos y adeudos.
-- Reportes automáticos para el administrador (por cobrador, por periodo, por monto).
-- Alertas de clientes morosos.
-- Agregar clientes/creditos nuevos.
-- Administrar moras.
+Crea un archivo .env en backend/ con la configuración de la BD:
 
-## 5. Estrategia de Implementación
+```bash
+FLASK_APP=run.py
+FLASK_ENV=development
+DATABASE_URL=postgresql://usuario:password@localhost:5432/microcredit
+SECRET_KEY=supersecreto
+```
 
-Front-End (HTML+CSS+JS):
-- Dashboard para cobradores.
-- Dashboard de control para administrador.
-- Login
+### 4. Iniciar el servidor
+```bash
+flask run
+```
+El backend estará disponible en http://localhost:5000.
 
-Back-End (Flask):
+### 5. Frontend
+---
+Abrir frontend/index.html en el navegador (o servirlo con un servidor estático).
 
-- API para registrar pagos, actualizar saldos y generar reportes.
-- Roles de usuario: cobrador y administrador.
+### 📚 Documentación
 
-Base de Datos (Postgres):
-- Tablas principales: usuarios, creditos, pagos, clientes, carteras.
-- Vistas o queries para reportes de cobranza.
+📊 [Plan de Negocios](docs/business-plan.md)
+📄 [Arquitectura](docs/arquitectura.md)
+🎨 [Diseño UI](docs/ui-design.md)
+🛠 [Guía de primeros pasos](docs/primeros_pasos.md)
 
-Control de versiones (GitHub):
-- Ramas: main, develop, feature/*.
-- Uso de Issues y Pull Requests.
+---
+### ✅ Roadmap
+- [ ] Definición de endpoints backend
+- [ ] Conexión a PostgreSQL
+- [ ] Autenticación de usuarios
+- [ ] Dashboards en frontend
+- [ ] Reportes automáticos
+- [ ] Pruebas e integración
 
-## 6. Roles y Responsabilidades
+---
+### 👥 Roles
 
-Product Owner (PO): Define requerimientos de cobradores y administrador. - Rene Bermejo.
+PO: Rene Bermejo
 
-Project Manager (PM): Planifica actividades y hace seguimiento. - Raúl Valverde.
+PM: Raúl Valverde
 
-Front-End (FE): Diseña dashboards para cobradores y administrador. - Fernanda Iglesias / Gustavo Granados.
+Frontend: Fernanda Iglesias / Gustavo Granados
 
-Back-End (BE): Implementa API de cobranza y reportes. - Rebeca Gómez.
+Backend: Rebeca Gómez
 
-DBA: Diseña tablas de clientes, créditos, pagos y genera vistas para reportes. - Alfredo Esquivel.
+DBA: Alfredo Esquivel
 
-## 7. Plan de Trabajo (tentativo)
-- 1-2	  Diseño BD + mockups dashboard	  DBA + FE
-- 3-4	  API inicial (registro pagos, créditos)	  BE
-- 5-6	  Desarrollo FE (formularios, dashboards)	  FE
-- 7	  Integración FE+BE + pruebas de flujo	  FE + BE
-- 8	  Reportes + documentación final	  DBA + PM
+---
+### 🤝 Contribución
+
+Fork del repositorio
+
+Rama de feature: git checkout -b feature/nueva-funcionalidad
+
+Commit: git commit -m "feat: agrega nueva funcionalidad"
+
+Push: git push origin feature/nueva-funcionalidad
+
+Pull Request
+
+### 📜 Licencia
+
+MIT License. [Ver](docs/LICENSE)
 
 ## -- Notas --
+
 - Para el PO, DBA y BE: [Link al google sheets del cliente](https://docs.google.com/spreadsheets/d/1zv5CVmtzXvHYGdaY3UP40fK2whJVYFIGNw84OHz_w0c/edit?usp=sharing).
-- Guía de instalación y configuración del proyecto [Link](https://github.com/raulhongo3132/administracion-de-microcreditos/blob/main/primeros_pasos.md).
 - Lista de tareas y diagramas [Link a sheets](https://docs.google.com/spreadsheets/d/1otMOkEbiK9ZjKtjpQzz7Nzl1j3uJB0RvwW3Z7_zzNr4/edit?usp=sharing).
+- Figma maquetado [Link](https://www.figma.com/design/ISTtXyQiLTXbODx6xckYG1/administracion-microcreditos?node-id=0-1&t=HzNzBObUzvOMqFpv-0)
