@@ -1,0 +1,49 @@
+{% extends "base_auth.html" %}
+
+{% block title %}Verificar Código{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="left">
+        <h1>Administración<br>de microcréditos</h1>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='img/logo-m.png') }}" alt="Logo M">
+        </div>
+    </div>
+
+    <div class="right">
+        <h2><u>Verificar Código</u></h2>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <p>Ingresa el código de verificación enviado al número:</p>
+        <p><strong>{{ session.get('reset_phone', 'N/A') }}</strong></p>
+        <p><small><strong>Código de prueba:</strong> 1234</small></p>
+
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+            
+            <div class="form-group">
+                {{ form.code.label }}
+                {{ form.code(class="input", placeholder="Ingresa el código", maxlength="6") }}
+                {% for error in form.code.errors %}
+                    <span style="color: red; font-size: 0.9em;">{{ error }}</span>
+                {% endfor %}
+            </div>
+
+            {{ form.submit(class="button") }}
+        </form>
+
+        <div class="links">
+            <a href="{{ url_for('auth.forgot_password') }}">Cambiar número</a> | 
+            <a href="{{ url_for('auth.cancel_reset') }}">Cancelar</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

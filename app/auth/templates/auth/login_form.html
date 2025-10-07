@@ -8,7 +8,7 @@
     <div class="left">
         <h1>Administración<br>de microcréditos</h1>
         <div class="logo">
-            <img src="{{ url_for('static', filename='logo-m.png') }}" alt="Logo M">
+            <img src="{{ url_for('static', filename='img/logo-m.png') }}" alt="Logo M">
         </div>
     </div>
 
@@ -19,26 +19,20 @@
             {{ form.hidden_tag() }}
 
             <!-- Username -->
-            <input 
-                type="text" 
-                name="{{ form.username.name }}" 
-                placeholder="Usuario" 
-                class="input"
-            >
-            {% for error in form.username.errors %}
-                <span style="color: red;">{{ error }}</span>
-            {% endfor %}
+            <div>
+                {{ form.username(placeholder="Usuario", class="input") }}
+                {% for error in form.username.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
 
             <!-- Password -->
-            <input 
-                type="password" 
-                name="{{ form.password.name }}" 
-                placeholder="Contraseña" 
-                class="input"
-            >
-            {% for error in form.password.errors %}
-                <span style="color: red;">{{ error }}</span>
-            {% endfor %}
+            <div>
+                {{ form.password(placeholder="Contraseña", class="input") }}
+                {% for error in form.password.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
 
             <!-- Remember me -->
             <div>
@@ -46,12 +40,14 @@
             </div>
 
             <!-- Submit -->
-            <button type="submit" class="button">{{ form.submit.label.text }}</button>
+            <div>
+                {{ form.submit(class="button") }}
+            </div>
         </form>
 
-        <a href="#" class="forgot">Olvidé la contraseña</a>
+        <a href="{{ url_for('auth.forgot_password') }}" class="forgot">Olvidé la contraseña</a>
         <div class="github">
-            <img src="{{ url_for('static', filename='github.png') }}" alt="GitHub">
+            <img src="{{ url_for('static', filename='img/github.png') }}" alt="GitHub">
         </div>
     </div>
 </div>

@@ -56,3 +56,8 @@ class User(UserMixin, db.Model):
     @staticmethod
     def get_all():
         return User.query.all()
+    
+    @classmethod
+    def get_by_phone(cls, phone):
+        # Implementar la búsqueda por teléfono según tu ORM
+        return cls.query.filter_by(phone=phone).first()

@@ -61,7 +61,7 @@ form {
   width: 70%;
 }
 
-input {
+.right form input.input {
   width: 100%;
   padding: 0.8rem;
   margin-bottom: 1rem;
@@ -71,7 +71,7 @@ input {
   color: gray;
 }
 
-button {
+.right form .button {
   width: 100%;
   padding: 0.8rem;
   background-color: black;
