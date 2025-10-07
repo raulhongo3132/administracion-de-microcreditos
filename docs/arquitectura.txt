@@ -1,0 +1,72 @@
+# Arquitectura
+admo_micro_creditos/
+├─ app/
+│  ├─ admin/
+│  │  ├─ templates/
+│  │  │  ├─ admin/
+│  │  │  │  ├─ index.html
+│  │  │  │  ├─ ...
+│  │  ├─ __init__.py
+│  │  ├─ forms.py
+│  │  ├─ routes.py
+│  ├─ auth/
+│  │  ├─ templates/
+│  │  │  ├─ auth/
+│  │  │  │  ├─ login_form.html
+│  │  │  │  ├─ ...
+│  │  ├─ __init__.py
+│  │  ├─ decorators.py
+│  │  ├─ forms.py
+│  │  ├─ models.py
+│  │  ├─ routes.py
+│  ├─ collectors/
+│  │  ├─ templates/
+│  │  │  ├─ collectors/
+│  │  │  │  ├─ index.html
+│  │  │  │  ├─ ...
+│  │  ├─ __init__.py
+│  │  ├─ decorators.py
+│  │  ├─ forms.py
+│  │  ├─ models.py
+│  │  ├─ routes.py
+│  ├─ static/
+│  │  ├─ base.css
+│  ├─ templetes/
+│  │  ├─ base_template.html
+│  │  ├─ 401.html
+│  │  ├─ ...
+│  ├─ tests/
+│  │  ├─ __init__.py
+│  │  ├─ test_x.css
+│  │  ├─ ...
+│  ├─ __init__.py
+│  ├─ models.py
+├─ config/
+│  ├─ default.py
+│  ├─ dev.py
+│  ├─ local.py
+│  ├─ prod.py
+│  ├─ default.py
+│  ├─ testing.py
+├─ env/
+├─ instance/
+│  ├─ config-resting.py
+│  ├─ config.py
+├─ migrations/
+├─ .gitignore
+├─ CHANGELOG.md
+├─ notas.md
+├─ entrypoints.py
+├─ LICENSE
+├─ README.md
+├─ requirements.txt
+
+
+admo_micro_creditos/
+├─ app/
+│  ├─ admin/
+│  ├─ auth/
+│  ├─ customers/
+│  ├─ loan/
+│  ├─ ...
+│  ...
