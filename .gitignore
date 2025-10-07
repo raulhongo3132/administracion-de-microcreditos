@@ -1,0 +1,46 @@
+# Entorno virtual
+env/
+
+# Archivos de Python compilados
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Archivos temporales de sistema
+*.swp
+*.swo
+.DS_Store
+
+# Configuraciones locales
+*.env
+*.sqlite3
+
+# Logs
+*.log
+
+# VSCode
+.vscode/
+
+# PyCharm
+.idea/
+
+# Flask/WTF uploads (si los hubiera)
+uploads/
+
+# Archivos de migraciones locales generadas por Flask-Migrate
+migrations/__pycache__/
+migrations/*.pyc
+
+# Archivos de testing temporales
+tests/tmp/
+
+# Archivos de cobertura / pytest
+.coverage
+htmlcov/
+
+# Archivos de lock de Python/Poetry/venv
+Pipfile.lock
+poetry.lock
+
+
