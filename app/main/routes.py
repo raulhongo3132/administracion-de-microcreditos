@@ -1,24 +1,33 @@
-#from flask import render_template
-#from app.main import bp
-
-#@bp.route('/')
-#def index():
-#    return render_template('main/index.html', title='Inicio')
-
-#@bp.route('/about')
-#def about():
-#    return render_template('main/about.html', title='Acerca de')
-
-from flask import render_template
+from flask import render_template, abort, current_app
 from app.main import bp
-import os
 
 @bp.route('/')
 def index():
-    # Listar qué plantillas encuentra Flask
-    print("Buscando plantillas en:", bp.template_folder)
-    return render_template('main/index.html', title='Inicio')
+    current_app.logger.info('Página de inicio accedida')
+    return render_template('index.html', title='Inicio')  # ← nombre simple
 
 @bp.route('/about')
 def about():
-    return render_template('main/about.html', title='Acerca de')
+    current_app.logger.info('Página "Acerca de" accedida')
+    return render_template('about.html', title='Acerca de')  # ← nombre simple
+
+# ... resto del código igual
+
+@bp.route('/test-404')
+def test_404():
+    current_app.logger.warning('Error 404 generado intencionalmente')
+    abort(404)
+
+@bp.route('/test-500')
+def test_500():
+    current_app.logger.error('Error 500 generado intencionalmente')
+    raise Exception("Este es un error de prueba para logging!")
+
+@bp.route('/test-log')
+def test_log():
+    current_app.logger.debug('Mensaje DEBUG - información detallada')
+    current_app.logger.info('Mensaje INFO - operación normal')
+    current_app.logger.warning('Mensaje WARNING - algo inusual')
+    current_app.logger.error('Mensaje ERROR - problema serio')
+    
+    return "Logs de prueba generados. Revisa la consola y archivo de logs."

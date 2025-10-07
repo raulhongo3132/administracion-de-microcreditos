@@ -1,0 +1,72 @@
+2025-10-07 00:43:36,528 INFO: Aplicación Flask iniciada [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\__init__.py:169]
+2025-10-07 00:44:03,729 INFO: Página de inicio accedida [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\main\routes.py:89]
+2025-10-07 00:44:03,739 INFO: 127.0.0.1 - "GET / HTTP/1.1" 200 - 0.009s [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\middleware.py:13]
+2025-10-07 00:44:03,809 INFO: 127.0.0.1 - "GET /static/css/style.css HTTP/1.1" 304 - 0.042s [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\middleware.py:13]
+2025-10-07 00:46:12,457 INFO: Página de registro accedida [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\auth\routes.py:25]
+2025-10-07 00:46:12,460 INFO: 127.0.0.1 - "GET /auth/register HTTP/1.1" 200 - 0.004s [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\middleware.py:13]
+2025-10-07 00:46:12,473 INFO: 127.0.0.1 - "GET /static/css/style.css HTTP/1.1" 304 - 0.001s [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\middleware.py:13]
+2025-10-07 00:46:13,251 INFO: Página de login accedida [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\auth\routes.py:20]
+2025-10-07 00:46:13,254 INFO: 127.0.0.1 - "GET /auth/login HTTP/1.1" 200 - 0.003s [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\middleware.py:13]
+2025-10-07 00:46:13,266 INFO: 127.0.0.1 - "GET /static/css/style.css HTTP/1.1" 304 - 0.001s [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\middleware.py:13]
+2025-10-07 00:46:14,458 INFO: Página "Acerca de" accedida [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\main\routes.py:94]
+2025-10-07 00:46:14,461 INFO: 127.0.0.1 - "GET /about HTTP/1.1" 200 - 0.003s [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\middleware.py:13]
+2025-10-07 00:46:14,473 INFO: 127.0.0.1 - "GET /static/css/style.css HTTP/1.1" 304 - 0.001s [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\middleware.py:13]
+2025-10-07 00:46:15,267 INFO: Página de inicio accedida [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\main\routes.py:89]
+2025-10-07 00:46:15,268 INFO: 127.0.0.1 - "GET / HTTP/1.1" 200 - 0.002s [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\middleware.py:13]
+2025-10-07 00:46:15,284 INFO: 127.0.0.1 - "GET /static/css/style.css HTTP/1.1" 304 - 0.001s [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\middleware.py:13]
+2025-10-07 00:47:01,287 WARNING: Error 404 generado intencionalmente [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\main\routes.py:101]
+2025-10-07 00:47:01,289 ERROR: Exception on /test-404 [GET] [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\venv\Lib\site-packages\flask\app.py:1414]
+Traceback (most recent call last):
+  File "C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\venv\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\venv\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\main\routes.py", line 102, in test_404
+    abort(404)
+  File "C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\venv\Lib\site-packages\flask\helpers.py", line 277, in abort
+    current_app.aborter(code, *args, **kwargs)
+  File "C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\venv\Lib\site-packages\werkzeug\exceptions.py", line 876, in __call__
+    raise self.mapping[code](*args, **kwargs)
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\venv\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\venv\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\venv\Lib\site-packages\flask\app.py", line 1341, in handle_user_exception
+    return self.handle_http_exception(e)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\venv\Lib\site-packages\flask\app.py", line 1281, in handle_http_exception
+    return self.ensure_sync(handler)(e)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\auth\__init__.py", line 24, in not_found_error
+    current_app.logger.warning(f'Error 404: {request.url}')
+                                             ^^^^^^^
+NameError: name 'request' is not defined
+2025-10-07 00:47:01,328 ERROR: Error 500: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\auth\__init__.py:29]
+2025-10-07 00:47:01,332 INFO: 127.0.0.1 - "GET /test-404 HTTP/1.1" 500 - 0.045s [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\middleware.py:13]
+2025-10-07 00:47:01,359 INFO: 127.0.0.1 - "GET /static/css/style.css HTTP/1.1" 304 - 0.001s [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\middleware.py:13]
+2025-10-07 00:58:31,890 INFO: Aplicación Flask iniciada [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\__init__.py:28]
+2025-10-07 00:58:33,844 INFO: Página de inicio accedida [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\main\routes.py:6]
+2025-10-07 00:58:33,852 INFO: 127.0.0.1 - "GET / HTTP/1.1" 200 - 0.009s [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\middleware.py:13]
+2025-10-07 00:58:33,928 INFO: 127.0.0.1 - "GET /static/css/style.css HTTP/1.1" 304 - 0.043s [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\middleware.py:13]
+2025-10-07 00:58:35,699 INFO: Página de inicio accedida [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\main\routes.py:6]
+2025-10-07 00:58:35,700 INFO: 127.0.0.1 - "GET / HTTP/1.1" 200 - 0.002s [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\middleware.py:13]
+2025-10-07 00:58:35,713 INFO: 127.0.0.1 - "GET /static/css/style.css HTTP/1.1" 304 - 0.001s [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\middleware.py:13]
+2025-10-07 00:58:36,981 INFO: Página de inicio accedida [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\main\routes.py:6]
+2025-10-07 00:58:36,982 INFO: 127.0.0.1 - "GET / HTTP/1.1" 200 - 0.001s [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\middleware.py:13]
+2025-10-07 00:58:36,994 INFO: 127.0.0.1 - "GET /static/css/style.css HTTP/1.1" 304 - 0.001s [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\middleware.py:13]
+2025-10-07 00:58:37,642 INFO: Página "Acerca de" accedida [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\main\routes.py:11]
+2025-10-07 00:58:37,644 INFO: 127.0.0.1 - "GET /about HTTP/1.1" 200 - 0.002s [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\middleware.py:13]
+2025-10-07 00:58:37,655 INFO: 127.0.0.1 - "GET /static/css/style.css HTTP/1.1" 304 - 0.000s [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\middleware.py:13]
+2025-10-07 00:58:39,269 INFO: Página "Acerca de" accedida [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\main\routes.py:11]
+2025-10-07 00:58:39,270 INFO: 127.0.0.1 - "GET /about HTTP/1.1" 200 - 0.001s [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\middleware.py:13]
+2025-10-07 00:58:39,282 INFO: 127.0.0.1 - "GET /static/css/style.css HTTP/1.1" 304 - 0.000s [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\middleware.py:13]
+2025-10-07 00:58:40,021 INFO: Página de login accedida [in C:\Users\Jefem\OneDrive\Documents\Ingenieria de software\administracion-de-microcreditos\app\auth\routes.py:6]

@@ -1,12 +1,12 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, current_app
 from app.auth import bp
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
-    # Por ahora sin formularios, solo la página básica
-    return render_template('auth/login.html', title='Iniciar Sesión')
+    current_app.logger.info('Página de login accedida')
+    return render_template('login.html', title='Iniciar Sesión')  # ← nombre simple
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
-    # Por ahora sin formularios, solo la página básica
-    return render_template('auth/register.html', title='Registrarse')
+    current_app.logger.info('Página de registro accedida')
+    return render_template('register.html', title='Registrarse')  # ← nombre simple
