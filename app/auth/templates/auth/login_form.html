@@ -17,22 +17,38 @@
         <h2><u>Bienvenido</u></h2>
         <form method="post" novalidate>
             {{ form.hidden_tag() }}
-            <input type="text" name="{{ form.username.name }}" placeholder="Usuario" value="{{ form.username.data }}">
+
+            <!-- Username -->
+            <input 
+                type="text" 
+                name="{{ form.username.name }}" 
+                placeholder="Usuario" 
+                class="input"
+            >
             {% for error in form.username.errors %}
                 <span style="color: red;">{{ error }}</span>
             {% endfor %}
 
-            <input type="password" name="{{ form.password.name }}" placeholder="Contraseña">
+            <!-- Password -->
+            <input 
+                type="password" 
+                name="{{ form.password.name }}" 
+                placeholder="Contraseña" 
+                class="input"
+            >
             {% for error in form.password.errors %}
                 <span style="color: red;">{{ error }}</span>
             {% endfor %}
 
+            <!-- Remember me -->
             <div>
                 {{ form.remember_me() }} {{ form.remember_me.label }}
             </div>
 
-            <button type="submit">{{ form.submit.label.text }}</button>
+            <!-- Submit -->
+            <button type="submit" class="button">{{ form.submit.label.text }}</button>
         </form>
+
         <a href="#" class="forgot">Olvidé la contraseña</a>
         <div class="github">
             <img src="{{ url_for('static', filename='github.png') }}" alt="GitHub">
