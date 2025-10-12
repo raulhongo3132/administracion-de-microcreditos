@@ -1,11 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Mi App Flask</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <h1>Bienvenido a mi aplicación Flask</h1>
-    <p>Esta es mi primera aplicación web con Flask</p>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Inicio - Mi App Flask{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Bienvenido a Mi App Flask</h1>
+    <p>Esta es la página de inicio de nuestra aplicación.</p>
+    
+    <h2>Características:</h2>
+    <ul>
+        <li>Plantillas con herencia</li>
+        <li>Estilos CSS</li>
+        <li>Rutas dinámicas</li>
+        <li>Variables en plantillas</li>
+    </ul>
+
+    <h3>Ejemplo de variables:</h3>
+    <p>Puedes visitar la página de <a href="{{ url_for('usuario', nombre='Ana') }}">Ana</a> para ver un ejemplo.</p>
+</div>
+{% endblock %}

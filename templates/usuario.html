@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Usuario {{ nombre }} - Mi App Flask{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Perfil de Usuario</h1>
+    
+    <!-- Mostrando variables -->
+    <h2>Hola, {{ nombre }}!</h2>
+    <p>Edad: {{ edad }} años</p>
+
+    <!-- Condicional -->
+    {% if edad >= 18 %}
+        <p class="adulto">Eres mayor de edad</p>
+    {% else %}
+        <p class="menor">Eres menor de edad</p>
+    {% endif %}
+
+    <!-- Bucle for -->
+    <h3>Tus hobbies:</h3>
+    <ul>
+        {% for hobby in hobbies %}
+            <li>{{ hobby|title }}</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Filtros -->
+    <h3>Ejemplos de filtros:</h3>
+    <p>Nombre en mayúsculas: {{ nombre|upper }}</p>
+    <p>Nombre en minúsculas: {{ nombre|lower }}</p>
+    <p>Primer hobby: {{ hobbies[0]|capitalize }}</p>
+</div>
+{% endblock %}

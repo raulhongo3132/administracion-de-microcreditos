@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Condicionales - Mi App Flask{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Ejemplo de Condicionales</h1>
+    
+    <p>Tu edad es: <strong>{{ edad }}</strong></p>
+
+    {% if edad < 13 %}
+        <div class="categoria-nino">
+            <h2>Eres un niño</h2>
+            <p>Contenido apropiado para menores de 13 años</p>
+        </div>
+    {% elif edad < 18 %}
+        <div class="categoria-adolescente">
+            <h2>Eres un adolescente</h2>
+            <p>Contenido para adolescentes</p>
+        </div>
+    {% elif edad < 65 %}
+        <div class="categoria-adulto">
+            <h2>Eres un adulto</h2>
+            <p>Contenido para adultos</p>
+        </div>
+    {% else %}
+        <div class="categoria-mayor">
+            <h2>Eres un adulto mayor</h2>
+            <p>Contenido para la tercera edad</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
