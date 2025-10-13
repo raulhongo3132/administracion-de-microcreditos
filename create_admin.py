@@ -8,14 +8,14 @@ with app.app_context():
     admin = User.query.filter_by(rol='admin').first()
     if not admin:
         admin = User(
-            name='Administrador Principal',
-            username='admin',
-            phone='1234567890',
-            rol='admin'
+            name='Raúl Valverde',
+            username='raulval',
+            phone='5562540486',
+            rol='collector'
         )
-        admin.set_password('admin123')
+        admin.set_password('313271320')
         db.session.add(admin)
         db.session.commit()
-        print('✅ Usuario admin creado: usuario=admin, contraseña=admin123')
+        print('✅ Usuario admin creado: usuario=raulval, contraseña=313271320')
     else:
         print('⚠️  Ya existe un usuario admin')
