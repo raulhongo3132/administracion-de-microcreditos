@@ -23,7 +23,7 @@
 
         <div class="form-group">
             {{ form.password.label(class="form-label") }}
-            {{ form.password(class="form-control", placeholder="Mínimo 6 caracteres") }}
+            {{ form.password(class="form-control", placeholder="Tu contraseña") }}
             {% if form.password.errors %}
                 <div class="errors">
                     {% for error in form.password.errors %}
@@ -33,15 +33,25 @@
             {% endif %}
         </div>
 
+        <div class="form-group remember-me">
+            {{ form.remember_me() }}
+            {{ form.remember_me.label }}
+        </div>
+
         <div class="form-group">
             {{ form.submit(class="btn btn-primary") }}
         </div>
     </form>
 
+    <div class="registro-link">
+        <p>¿No tienes cuenta? <a href="{{ url_for('registro') }}">Regístrate aquí</a></p>
+    </div>
+
     <div class="demo-credentials">
         <h3>Credenciales de demo:</h3>
-        <p><strong>Email:</strong> usuario@ejemplo.com</p>
-        <p><strong>Contraseña:</strong> 123456</p>
+        <p><strong>Email:</strong> ana@ejemplo.com</p>
+        <p><strong>Contraseña:</strong> password123</p>
+        <p><small>También puedes usar: carlos@ejemplo.com o maria@ejemplo.com</small></p>
     </div>
 </div>
 {% endblock %}

@@ -1,8 +1,24 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField, SubmitField, IntegerField, SelectField
-from wtforms.validators import DataRequired, Email, Length, NumberRange
+from wtforms import StringField, PasswordField, TextAreaField, SubmitField, IntegerField, SelectField, BooleanField
+from wtforms.validators import DataRequired, Email, Length, NumberRange, EqualTo, ValidationError
+from models import get_user_by_email
 
 class LoginForm(FlaskForm):
+    email = StringField('Email', validators=[
+        DataRequired(message='El email es obligatorio'),
+        Email(message='Formato de email inválido')
+    ])
+    password = PasswordField('Contraseña', validators=[
+        DataRequired(message='La contraseña es obligatoria')
+    ])
+    remember_me = BooleanField('Recordarme')
+    submit = SubmitField('Iniciar Sesión')
+
+class RegistroForm(FlaskForm):
+    nombre = StringField('Nombre Completo', validators=[
+        DataRequired(message='El nombre es obligatorio'),
+        Length(min=2, max=50, message='El nombre debe tener entre 2 y 50 caracteres')
+    ])
     email = StringField('Email', validators=[
         DataRequired(message='El email es obligatorio'),
         Email(message='Formato de email inválido')
@@ -11,7 +27,16 @@ class LoginForm(FlaskForm):
         DataRequired(message='La contraseña es obligatoria'),
         Length(min=6, message='La contraseña debe tener al menos 6 caracteres')
     ])
-    submit = SubmitField('Iniciar Sesión')
+    confirm_password = PasswordField('Confirmar Contraseña', validators=[
+        DataRequired(message='Confirma tu contraseña'),
+        EqualTo('password', message='Las contraseñas no coinciden')
+    ])
+    submit = SubmitField('Registrarse')
+    
+    def validate_email(self, email):
+        usuario = get_user_by_email(email.data)
+        if usuario:
+            raise ValidationError('Este email ya está registrado. Por favor usa otro.')
 
 class ContactoForm(FlaskForm):
     nombre = StringField('Nombre', validators=[

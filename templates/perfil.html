@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Mi Perfil - Mi App Flask{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Mi Perfil</h1>
+    
+    <div class="profile-header">
+        <h2>{{ current_user.nombre }}</h2>
+        <p class="user-email">{{ current_user.email }}</p>
+    </div>
+
+    <div class="profile-stats">
+        <div class="stat-card">
+            <h3>Miembro desde</h3>
+            <p>Hoy</p>
+        </div>
+        <div class="stat-card">
+            <h3>Estado</h3>
+            <p class="status-active">Activo</p>
+        </div>
+        <div class="stat-card">
+            <h3>Rol</h3>
+            <p>Usuario</p>
+        </div>
+    </div>
+
+    <div class="profile-actions">
+        <h3>Gestión de Cuenta</h3>
+        <div class="action-buttons">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Volver al Dashboard</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-danger">Cerrar Sesión</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

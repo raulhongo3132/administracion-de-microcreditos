@@ -13,8 +13,15 @@
                 <li><a href="{{ url_for('index') }}">Inicio</a></li>
                 <li><a href="{{ url_for('usuario', nombre='Juan') }}">Usuario Ejemplo</a></li>
                 <li><a href="{{ url_for('contacto') }}">Contacto</a></li>
-                <li><a href="{{ url_for('login') }}">Login</a></li>
-                <li><a href="{{ url_for('formulario_simple') }}">Form Simple</a></li>
+                
+                {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ url_for('perfil') }}">Mi Perfil</a></li>
+                    <li><a href="{{ url_for('logout') }}">Cerrar Sesión ({{ current_user.nombre }})</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Iniciar Sesión</a></li>
+                    <li><a href="{{ url_for('registro') }}">Registrarse</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>
@@ -40,6 +47,9 @@
 
     <footer>
         <p>&copy; 2024 Mi App Flask - Todos los derechos reservados</p>
+        {% if current_user.is_authenticated %}
+            <p class="user-info">Usuario conectado: {{ current_user.nombre }} ({{ current_user.email }})</p>
+        {% endif %}
     </footer>
 </body>
 </html>

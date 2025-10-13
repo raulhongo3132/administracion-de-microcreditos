@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Registro - Mi App Flask{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Crear Cuenta</h1>
+    <p>Regístrate para acceder a todas las funcionalidades.</p>
+
+    <form method="POST" class="form-registro">
+        {{ form.hidden_tag() }}
+        
+        <div class="form-group">
+            {{ form.nombre.label(class="form-label") }}
+            {{ form.nombre(class="form-control", placeholder="Tu nombre completo") }}
+            {% if form.nombre.errors %}
+                <div class="errors">
+                    {% for error in form.nombre.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control", placeholder="tu@email.com") }}
+            {% if form.email.errors %}
+                <div class="errors">
+                    {% for error in form.email.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.password.label(class="form-label") }}
+            {{ form.password(class="form-control", placeholder="Mínimo 6 caracteres") }}
+            {% if form.password.errors %}
+                <div class="errors">
+                    {% for error in form.password.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.confirm_password.label(class="form-label") }}
+            {{ form.confirm_password(class="form-control", placeholder="Repite tu contraseña") }}
+            {% if form.confirm_password.errors %}
+                <div class="errors">
+                    {% for error in form.confirm_password.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+
+    <div class="login-link">
+        <p>¿Ya tienes cuenta? <a href="{{ url_for('login') }}">Inicia sesión aquí</a></p>
+    </div>
+</div>
+{% endblock %}

@@ -202,3 +202,163 @@ footer {
     margin-top: 0;
     color: #495057;
 }
+
+/* Estilos para sistema de login */
+.form-registro, .form-login {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.remember-me label {
+    margin: 0;
+    font-weight: normal;
+}
+
+.login-link, .registro-link {
+    margin-top: 1.5rem;
+    text-align: center;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+/* Dashboard y perfil */
+.welcome-message {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 8px;
+}
+
+.welcome-message h2 {
+    margin: 0;
+    color: white;
+}
+
+.user-info-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.info-item {
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+.status-active {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.dashboard-actions, .profile-actions {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Perfil */
+.profile-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.user-email {
+    color: #6c757d;
+    font-size: 1.1rem;
+}
+
+.profile-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.stat-card h3 {
+    margin: 0 0 0.5rem 0;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.stat-card p {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Información del usuario en footer */
+.user-info {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-top: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .profile-stats {
+        grid-template-columns: 1fr;
+    }
+}

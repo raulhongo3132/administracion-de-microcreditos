@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Mi App Flask{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Dashboard</h1>
+    
+    <div class="welcome-message">
+        <h2>¡Bienvenido, {{ current_user.nombre }}! 👋</h2>
+        <p>Has iniciado sesión correctamente en tu cuenta.</p>
+    </div>
+
+    <div class="user-info-card">
+        <h3>Tu Información</h3>
+        <div class="info-grid">
+            <div class="info-item">
+                <strong>Nombre:</strong> {{ current_user.nombre }}
+            </div>
+            <div class="info-item">
+                <strong>Email:</strong> {{ current_user.email }}
+            </div>
+            <div class="info-item">
+                <strong>ID de usuario:</strong> {{ current_user.id }}
+            </div>
+            <div class="info-item">
+                <strong>Estado:</strong> <span class="status-active">Activo</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-actions">
+        <h3>Acciones Disponibles</h3>
+        <div class="action-buttons">
+            <a href="{{ url_for('perfil') }}" class="btn btn-secondary">Ver Mi Perfil</a>
+            <a href="{{ url_for('contacto') }}" class="btn btn-secondary">Contactar Soporte</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-danger">Cerrar Sesión</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
