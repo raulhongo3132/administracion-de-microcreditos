@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Mi App Flask{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Iniciar Sesión</h1>
+    
+    <form method="POST" class="form-login">
+        {{ form.hidden_tag() }}
+        
+        <div class="form-group">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control", placeholder="usuario@ejemplo.com") }}
+            {% if form.email.errors %}
+                <div class="errors">
+                    {% for error in form.email.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.password.label(class="form-label") }}
+            {{ form.password(class="form-control", placeholder="Mínimo 6 caracteres") }}
+            {% if form.password.errors %}
+                <div class="errors">
+                    {% for error in form.password.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+
+    <div class="demo-credentials">
+        <h3>Credenciales de demo:</h3>
+        <p><strong>Email:</strong> usuario@ejemplo.com</p>
+        <p><strong>Contraseña:</strong> 123456</p>
+    </div>
+</div>
+{% endblock %}

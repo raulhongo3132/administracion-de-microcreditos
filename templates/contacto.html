@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Contacto - Mi App Flask{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Formulario de Contacto</h1>
+    <p>Completa el siguiente formulario para ponerte en contacto con nosotros.</p>
+
+    <form method="POST" class="form-contacto">
+        {{ form.hidden_tag() }}
+        
+        <div class="form-group">
+            {{ form.nombre.label(class="form-label") }}
+            {{ form.nombre(class="form-control") }}
+            {% if form.nombre.errors %}
+                <div class="errors">
+                    {% for error in form.nombre.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control") }}
+            {% if form.email.errors %}
+                <div class="errors">
+                    {% for error in form.email.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.edad.label(class="form-label") }}
+            {{ form.edad(class="form-control") }}
+            {% if form.edad.errors %}
+                <div class="errors">
+                    {% for error in form.edad.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.ciudad.label(class="form-label") }}
+            {{ form.ciudad(class="form-control") }}
+            {% if form.ciudad.errors %}
+                <div class="errors">
+                    {% for error in form.ciudad.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.mensaje.label(class="form-label") }}
+            {{ form.mensaje(class="form-control", rows=5) }}
+            {% if form.mensaje.errors %}
+                <div class="errors">
+                    {% for error in form.mensaje.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

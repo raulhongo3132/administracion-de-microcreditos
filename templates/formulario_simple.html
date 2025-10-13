@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Formulario Simple - Mi App Flask{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Formulario Simple (HTML puro)</h1>
+    <p>Este formulario usa HTML tradicional sin WTForms.</p>
+
+    <form method="POST" class="form-simple">
+        <div class="form-group">
+            <label for="nombre" class="form-label">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email" class="form-label">Email:</label>
+            <input type="email" id="email" name="email" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
