@@ -5,17 +5,37 @@
 {% block content %}
 <div class="container">
     <h1>Bienvenido a Mi App Flask</h1>
-    <p>Esta es la página de inicio de nuestra aplicación.</p>
+    <p>Esta es la página de inicio de nuestra aplicación con base de datos.</p>
+    
+    <div class="stats-cards">
+        <div class="stat-card">
+            <h3>👥 Usuarios Registrados</h3>
+            <p class="stat-number">{{ total_usuarios }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>📧 Mensajes Enviados</h3>
+            <p class="stat-number">{{ total_mensajes }}</p>
+        </div>
+    </div>
     
     <h2>Características:</h2>
     <ul>
-        <li>Plantillas con herencia</li>
-        <li>Estilos CSS</li>
-        <li>Rutas dinámicas</li>
-        <li>Variables en plantillas</li>
+        <li>✅ Base de datos SQLite con SQLAlchemy</li>
+        <li>✅ Sistema de autenticación completo</li>
+        <li>✅ Formularios con validación</li>
+        <li>✅ Plantillas con herencia</li>
+        <li>✅ Estilos CSS responsivos</li>
     </ul>
 
-    <h3>Ejemplo de variables:</h3>
-    <p>Puedes visitar la página de <a href="{{ url_for('usuario', nombre='Ana') }}">Ana</a> para ver un ejemplo.</p>
+    <div class="database-info">
+        <h3>📊 Información de la Base de Datos</h3>
+        <p>La aplicación ahora usa una base de datos SQLite real para almacenar:</p>
+        <ul>
+            <li>👤 Usuarios registrados</li>
+            <li>📝 Mensajes de contacto</li>
+            <li>🔐 Contraseñas seguras (hash)</li>
+            <li>📅 Fechas de creación</li>
+        </ul>
+    </div>
 </div>
 {% endblock %}

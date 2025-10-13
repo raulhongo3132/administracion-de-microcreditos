@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de Usuarios - Mi App Flask{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Lista de Usuarios Registrados</h1>
+    <p>Total de usuarios: {{ usuarios|length }}</p>
+
+    <div class="users-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Fecha Registro</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in usuarios %}
+                <tr>
+                    <td>{{ usuario.id }}</td>
+                    <td>{{ usuario.nombre }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td>{{ usuario.fecha_creacion.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>
+                        {% if usuario.activo %}
+                            <span class="status-active">Activo</span>
+                        {% else %}
+                            <span class="status-inactive">Inactivo</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="actions">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Volver al Dashboard</a>
+    </div>
+</div>
+{% endblock %}

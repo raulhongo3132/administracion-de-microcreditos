@@ -24,6 +24,12 @@
                 <strong>ID de usuario:</strong> {{ current_user.id }}
             </div>
             <div class="info-item">
+                <strong>Miembro desde:</strong> {{ current_user.fecha_creacion.strftime('%d/%m/%Y') }}
+            </div>
+            <div class="info-item">
+                <strong>Mensajes enviados:</strong> {{ mensajes_usuario }}
+            </div>
+            <div class="info-item">
                 <strong>Estado:</strong> <span class="status-active">Activo</span>
             </div>
         </div>
@@ -32,8 +38,9 @@
     <div class="dashboard-actions">
         <h3>Acciones Disponibles</h3>
         <div class="action-buttons">
-            <a href="{{ url_for('perfil') }}" class="btn btn-secondary">Ver Mi Perfil</a>
+            <a href="{{ url_for('perfil') }}" class="btn btn-primary">Ver Mi Perfil</a>
             <a href="{{ url_for('contacto') }}" class="btn btn-secondary">Contactar Soporte</a>
+            <a href="{{ url_for('lista_usuarios') }}" class="btn btn-secondary">Ver Usuarios</a>
             <a href="{{ url_for('logout') }}" class="btn btn-danger">Cerrar Sesión</a>
         </div>
     </div>

@@ -1,11 +1,14 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from forms import LoginForm, RegistroForm, ContactoForm
-from models import Usuario, get_user, get_user_by_email, usuarios_db
-import uuid
+from models import Usuario, MensajeContacto, crear_datos_ejemplo
+from database import db, init_app
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'mi_clave_secreta_muy_segura'
+
+# Configuración de la base de datos
+init_app(app)
 
 # Configuración de Flask-Login
 login_manager = LoginManager()
@@ -16,12 +19,22 @@ login_manager.login_message_category = 'info'
 
 @login_manager.user_loader
 def load_user(user_id):
-    return get_user(int(user_id))
+    return Usuario.query.get(int(user_id))
+
+# Crear datos de ejemplo al iniciar (solo en desarrollo)
+with app.app_context():
+    crear_datos_ejemplo()
 
 # Rutas públicas
 @app.route('/')
 def index():
-    return render_template('index.html')
+    # Contar usuarios y mensajes para mostrar en la página principal
+    total_usuarios = Usuario.query.count()
+    total_mensajes = MensajeContacto.query.count()
+    
+    return render_template('index.html', 
+                         total_usuarios=total_usuarios,
+                         total_mensajes=total_mensajes)
 
 @app.route('/usuario/<nombre>')
 def usuario(nombre):
@@ -45,8 +58,20 @@ def contacto():
         ciudad = form.ciudad.data
         mensaje = form.mensaje.data
         
+        # Guardar en base de datos
+        nuevo_mensaje = MensajeContacto(
+            nombre=nombre,
+            email=email,
+            edad=edad,
+            ciudad=ciudad,
+            mensaje=mensaje,
+            usuario_id=current_user.id if current_user.is_authenticated else None
+        )
+        
+        db.session.add(nuevo_mensaje)
+        db.session.commit()
+        
         flash(f'¡Gracias {nombre}! Tu mensaje ha sido enviado correctamente.', 'success')
-        print(f"Mensaje de {nombre} ({email}, {edad} años, {ciudad}): {mensaje}")
         return redirect(url_for('contacto'))
     
     return render_template('contacto.html', form=form)
@@ -54,7 +79,6 @@ def contacto():
 # Rutas de autenticación
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # Si el usuario ya está autenticado, redirigir al dashboard
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
     
@@ -65,16 +89,18 @@ def login():
         password = form.password.data
         remember_me = form.remember_me.data
         
-        # Buscar usuario en la "base de datos"
-        usuario = get_user_by_email(email)
+        # Buscar usuario en la base de datos
+        usuario = Usuario.query.filter_by(email=email).first()
         
         if usuario and usuario.check_password(password):
-            login_user(usuario, remember=remember_me)
-            flash(f'¡Bienvenido de nuevo, {usuario.nombre}!', 'success')
-            
-            # Redirigir a la página que intentaba acceder o al dashboard
-            next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('dashboard'))
+            if usuario.activo:
+                login_user(usuario, remember=remember_me)
+                flash(f'¡Bienvenido de nuevo, {usuario.nombre}!', 'success')
+                
+                next_page = request.args.get('next')
+                return redirect(next_page) if next_page else redirect(url_for('dashboard'))
+            else:
+                flash('Tu cuenta está desactivada.', 'error')
         else:
             flash('Email o contraseña incorrectos', 'error')
     
@@ -82,7 +108,6 @@ def login():
 
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
-    # Si el usuario ya está autenticado, redirigir al dashboard
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
     
@@ -94,9 +119,11 @@ def registro():
         password = form.password.data
         
         # Crear nuevo usuario
-        nuevo_id = max(usuarios_db.keys()) + 1 if usuarios_db else 1
-        nuevo_usuario = Usuario(nuevo_id, nombre, email, password)
-        usuarios_db[nuevo_usuario.id] = nuevo_usuario
+        nuevo_usuario = Usuario(nombre=nombre, email=email)
+        nuevo_usuario.set_password(password)
+        
+        db.session.add(nuevo_usuario)
+        db.session.commit()
         
         # Iniciar sesión automáticamente
         login_user(nuevo_usuario)
@@ -117,12 +144,28 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    # Obtener estadísticas del usuario
+    mensajes_usuario = MensajeContacto.query.filter_by(usuario_id=current_user.id).count()
+    
+    return render_template('dashboard.html', 
+                         mensajes_usuario=mensajes_usuario)
 
 @app.route('/perfil')
 @login_required
 def perfil():
-    return render_template('perfil.html')
+    # Obtener los mensajes del usuario
+    mensajes = MensajeContacto.query.filter_by(usuario_id=current_user.id).order_by(
+        MensajeContacto.fecha_creacion.desc()
+    ).all()
+    
+    return render_template('perfil.html', mensajes=mensajes)
+
+@app.route('/usuarios')
+@login_required
+def lista_usuarios():
+    # Solo administradores deberían ver esto (aquí todos los usuarios logueados pueden ver)
+    usuarios = Usuario.query.order_by(Usuario.fecha_creacion.desc()).all()
+    return render_template('lista_usuarios.html', usuarios=usuarios)
 
 @app.route('/formulario-simple', methods=['GET', 'POST'])
 def formulario_simple():
