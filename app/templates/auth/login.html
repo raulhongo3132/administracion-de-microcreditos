@@ -1,0 +1,69 @@
+{% extends "base_auth.html" %}
+
+{% block title %}Iniciar sesión - Microcréditos{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Lado izquierdo -->
+    <div class="left">
+        <h1>Administración<br>de microcréditos</h1>
+        <div class="logo">
+            <div style="width: 120px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 2em; font-weight: bold;">
+                M
+            </div>
+        </div>
+    </div>
+
+    <!-- Lado derecho -->
+    <div class="right">
+        <h2><u>Bienvenido</u></h2>
+        
+        <!-- Mensajes Flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+
+            <!-- Username -->
+            <div>
+                {{ form.username(placeholder="Usuario", class="input") }}
+                {% for error in form.username.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <!-- Password -->
+            <div>
+                {{ form.password(placeholder="Contraseña", class="input") }}
+                {% for error in form.password.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <!-- Submit -->
+            <div>
+                {{ form.submit(class="button") }}
+            </div>
+        </form>
+
+        
+        <a href="{{ url_for('auth.password_recovery') }}" class="forgot">Olvidé la contraseña</a>
+        
+        <div class="github">
+            <div style="width: 30px; height: 30px; background: #333; border-radius: 50%; margin: 0 auto;"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+            
