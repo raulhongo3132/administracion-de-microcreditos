@@ -6,8 +6,8 @@ Sistema Flask para gestión de préstamos informales con cobradores.
 
 ### 1. Clonar y configurar entorno
 ```bash
-    git clone [url-del-repositorio]
-    cd microcreditos-flask
+    git clone git@github.com:raulhongo3132/administracion-de-microcreditos.git
+    cd administracion-de-microcreditos
     python -m venv env
     source env/bin/activate
 ```
@@ -17,8 +17,9 @@ Sistema Flask para gestión de préstamos informales con cobradores.
     pip install -r requirements.txt
 ```
 ### 3. Configurar base de datos PostgreSQL
-```postgres
-    create database microcreditos
+En postgres crea la base de datos
+```
+    create database microcreditos'
 ```
 ### 4. Configurar aplicación
 ```bash
