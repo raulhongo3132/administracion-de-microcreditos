@@ -47,5 +47,5 @@ wheels/
 .DS_Store
 Thumbs.db
 
-# Migraciones (opcional - puedes subirlas o regenerarlas)
-# migrations/
+# Configuración de la base de datos
+config.py
