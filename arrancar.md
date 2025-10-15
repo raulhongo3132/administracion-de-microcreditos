@@ -34,7 +34,12 @@ Para la SECRET_KEY puedes hacer un:
 ### 5. Inicializar base de datos
 ```bash
     flask db upgrade
-    python create_admin.py
+    python create_admin.py # Para crear usuario username="admin" contraseña="admin123"
+```
+Puedes crear usuarios collector o customer, solo cambia admin por collector o customer.
+De salir todo bien saldrá en consola un:
+```bash
+    ✅ Usuario admin creado: usuario=raulval, contraseña=313271320
 ```
 ### 6. Ejecutar aplicación
 ```bash

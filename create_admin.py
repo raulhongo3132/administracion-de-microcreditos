@@ -8,10 +8,10 @@ with app.app_context():
     admin = User.query.filter_by(rol='admin').first()
     if not admin:
         admin = User(
-            name='Raúl Valverde',
-            username='raulval',
+            name='Administrador principal',
+            username='admin',
             phone='5562540486',
-            rol='collector'
+            rol='admin123'
         )
         admin.set_password('313271320')
         db.session.add(admin)

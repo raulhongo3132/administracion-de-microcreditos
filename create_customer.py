@@ -11,7 +11,7 @@ with app.app_context():
             name='Customer',
             username='customer',
             phone='1122334455',
-            rol='customer'
+            rol='customer123'
         )
         customer.set_password('customer234')
         db.session.add(customer)
