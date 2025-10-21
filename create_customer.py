@@ -13,7 +13,7 @@ with app.app_context():
             phone='1122334455',
             rol='customer'
         )
-        customer.set_password('customer234')
+        customer.set_password('customer123')
         db.session.add(customer)
         db.session.commit()
         print('✅ Usuario customer creado: usuario=customer, contraseña=customer123')
