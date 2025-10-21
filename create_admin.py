@@ -11,11 +11,11 @@ with app.app_context():
             name='Administrador principal',
             username='admin',
             phone='5562540486',
-            rol='admin123'
+            rol='admin'
         )
-        admin.set_password('313271320')
+        admin.set_password('admin123')
         db.session.add(admin)
         db.session.commit()
-        print('✅ Usuario admin creado: usuario=raulval, contraseña=313271320')
+        print('✅ Usuario admin creado: usuario=admin, contraseña=admin123')
     else:
         print('⚠️  Ya existe un usuario admin')
