@@ -1,0 +1,203 @@
+/* === Reset básico y Variables === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+:root {
+    --sidebar-width: 200px;
+    --topbar-height: 60px;
+    --dark-bg: #111;
+    --main-bg: #f8f8f8; 
+    --text-color: #fff;
+    --link-hover-bg: #333;
+}
+
+/* === Estructura de Layout === */
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* === Menú Lateral (Sidebar) === */
+.sidebar {
+    width: var(--sidebar-width);
+    min-width: var(--sidebar-width);
+    background-color: var(--dark-bg);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    position: relative; /* Para la "X" al final */
+    transition: all 0.3s ease;
+    flex-shrink: 0; /* Evita que se encoja */
+}
+
+.sidebar-header {
+    text-align: left;
+    margin: 0 0 30px 20px;
+    font-size: 1.2em;
+}
+
+.sidebar-link {
+    display: block;
+    color: var(--text-color);
+    text-decoration: none;
+    padding: 14px 20px;
+    font-size: 1.1em;
+}
+
+.sidebar-link:hover {
+    background-color: var(--link-hover-bg);
+}
+
+.sidebar-bottom {
+    margin-top: auto; /* Empuja los elementos al final */
+    padding-top: 10px;
+    border-top: 1px solid #333; 
+}
+
+.sidebar .logout {
+    color: #fff;
+}
+
+/* El botón 'X' (solo visible en el layout original, lo simulamos para estilo) */
+.sidebar .close-btn {
+    /* Estilos para que parezca un botón de texto */
+    background: none; 
+    border: none;
+    color: #ccc; /* Color gris claro */
+    font-size: 1.5em; 
+    cursor: pointer;
+    /* Centrado y margen */
+    display: block;
+    text-align: center;
+    margin: 10px auto;
+    padding: 10px;
+    transition: color 0.2s ease;
+}
+
+.sidebar .close-btn:hover {
+    color: #fff; /* Cambio de color al pasar el ratón */
+}
+
+/* === Contenido Principal (Wrapper) === */
+#main-content-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - var(--sidebar-width)); /* Inicialmente toma el espacio restante */
+    transition: width 0.3s ease, margin-left 0.3s ease;
+}
+
+/* === Cabecera (Topbar) === */
+.topbar {
+    display: flex;
+    align-items: center;
+    background-color: var(--dark-bg);
+    color: var(--text-color);
+    height: var(--topbar-height);
+    padding: 0 20px;
+    flex-shrink: 0;
+    border-bottom: 2px solid #333;
+}
+
+.topbar .menu-toggle {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 24px;
+    cursor: pointer;
+    margin-right: 15px;
+    /* Oculto por defecto en escritorio, se muestra al colapsar o en móvil */
+    display: none; 
+}
+
+.topbar .route-name {
+    font-weight: normal;
+    font-size: 1.1em;
+    flex-grow: 1;
+}
+
+.topbar .admin-info {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.topbar .admin-icon {
+    font-size: 28px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+/* === Cuerpo principal (Content) === */
+#content {
+    padding: 20px;
+    background-color: var(--main-bg);
+    flex-grow: 1;
+}
+
+/* ---------------------------------------------------------------------- */
+/* === RESPONSIVIDAD Y LÓGICA DEL MENÚ === */
+/* ---------------------------------------------------------------------- */
+
+/* Lógica para ESCRITORIO (>= 769px) */
+@media (min-width: 769px) {
+    /* 1. Estado inicial: Menú ABIERTO */
+    .sidebar {
+        /* Ya está en el layout normal */
+    }
+
+    /* 2. Estado colapsado: Menú CERRADO */
+    .sidebar.closed {
+        width: 0;
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    /* El contenido se expande cuando el menú está cerrado */
+    .sidebar.closed + #main-content-wrapper {
+        width: 100%;
+    }
+
+    /* El botón de hamburguesa aparece cuando el menú está cerrado */
+    .sidebar.closed + #main-content-wrapper .menu-toggle {
+        display: block; 
+    }
+}
+
+/* Lógica para MÓVIL (<= 768px) */
+@media (max-width: 768px) {
+    /* Deshabilitamos el Flexbox para que la sidebar sea absoluta */
+    .admin-layout {
+        display: block;
+    }
+    
+    /* El botón de hamburguesa siempre está visible en móvil */
+    .topbar .menu-toggle {
+        display: block;
+    }
+
+    /* La Sidebar se posiciona de forma absoluta sobre el contenido */
+    .sidebar {
+        position: fixed;
+        height: 100vh;
+        z-index: 100;
+        /* Estado inicial: oculto fuera de la pantalla */
+        transform: translateX(-100%); 
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* Estado abierto: se desliza hacia adentro (Mobile) */
+    .sidebar.open-mobile {
+        transform: translateX(0);
+    }
+
+    /* El contenido ocupa siempre el 100% en móvil */
+    #main-content-wrapper {
+        width: 100%;
+    }
+}

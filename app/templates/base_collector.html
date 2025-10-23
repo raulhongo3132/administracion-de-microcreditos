@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Panel Cobrador{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+</head>
+<body>
+    <div class="admin-layout">
+        <nav id="sidebar" class="sidebar">
+            <h2 class="sidebar-header">Administrador</h2>
+            <a href="{{ url_for('collectors.inicio') }}" class="sidebar-link">Inicio</a>
+            <a href="{{ url_for('collectors.clientes') }}" class="sidebar-link">Clientes</a>
+            <a href="{{ url_for('collectors.reportes') }}" class="sidebar-link">Reportes</a>
+            <a href="{{ url_for('collectors.cuenta') }}" class="sidebar-link">Cuenta</a>
+            
+            <div class="sidebar-bottom">
+                <a href="{{ url_for('auth.logout') }}" class="sidebar-link logout">Cerrar sesión</a>
+                <button class="close-btn" onclick="toggleMenu()">X</button> 
+            </div>
+        </nav>
+
+        <div id="main-content-wrapper">
+            <header class="topbar">
+                <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+                <span class="route-name">{{ route_name | default('Dashboard') }}</span>
+                <div class="admin-info">
+                    <span class="admin-name">{{ current_user.name | default('Cobrador') }}</span>
+                    <span class="admin-icon">M</span> 
+                </div>
+            </header>
+            <main id="content">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                {% block content %}
+                {% endblock %}
+            </main>
+        </div>
+    </div>
+    
+    <script>
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const isMobile = window.innerWidth <= 768;
+
+            // Asegurarse de que las transiciones estén activas al hacer clic
+            sidebar.style.transition = 'all 0.3s ease'; 
+
+            if (isMobile) {
+                // Lógica para MÓVIL (Usa 'open-mobile' para abrir)
+                sidebar.classList.toggle('open-mobile');
+            } else {
+                // Lógica para ESCRITORIO (Usa 'closed' para cerrar/colapsar)
+                sidebar.classList.toggle('closed');
+                
+                // Opcional: Alternar la visibilidad del botón 'X'
+                const closeBtn = document.querySelector('.close-btn');
+                if (closeBtn) {
+                   closeBtn.style.display = sidebar.classList.contains('closed') ? 'none' : 'block';
+                }
+            }
+        }
+
+        function disableTransitions() {
+            const sidebar = document.getElementById('sidebar');
+            // 1. Deshabilitar transiciones antes de establecer el estado inicial
+            sidebar.style.transition = 'none';
+
+            const isMobile = window.innerWidth <= 768;
+
+            if (isMobile) {
+                // Móvil: Asegura que la clase 'open-mobile' no esté presente
+                sidebar.classList.remove('open-mobile');
+            } else {
+                // Escritorio: Añade la clase 'closed' para iniciar colapsado sin animación
+                sidebar.classList.add('closed');
+            }
+            
+            // 2. Volver a habilitar las transiciones después de un breve retraso
+            // El setTimeout de 50ms (o 0ms) asegura que la clase se aplique antes de reactivar la transición.
+            setTimeout(() => {
+                sidebar.style.transition = 'all 0.3s ease';
+            }, 50); 
+            
+            // Oculta el botón 'X' al inicio si el menú comienza cerrado
+            const closeBtn = document.querySelector('.close-btn');
+            if (closeBtn) {
+               closeBtn.style.display = 'none';
+            }
+        }
+
+        // Ejecutar la función de inicialización al cargar la página
+        document.addEventListener('DOMContentLoaded', disableTransitions);
+        
+        // Manejar el cambio de tamaño de pantalla (opcional pero recomendado)
+        window.addEventListener('resize', () => {
+             const sidebar = document.getElementById('sidebar');
+             const isMobile = window.innerWidth <= 768;
+
+             // Desactiva la transición temporalmente para evitar animaciones locas al cambiar de resolución
+             sidebar.style.transition = 'none'; 
+
+             if (isMobile) {
+                 sidebar.classList.remove('closed');
+             } else {
+                 sidebar.classList.remove('open-mobile');
+             }
+             
+             // Reactiva la transición
+             setTimeout(() => {
+                 sidebar.style.transition = 'all 0.3s ease';
+             }, 50);
+        });
+    </script>
+</body>
+</html>

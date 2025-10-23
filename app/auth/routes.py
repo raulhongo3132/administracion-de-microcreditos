@@ -12,9 +12,9 @@ def login():
     if current_user.is_authenticated:
         # Redirigir según el rol
         if current_user.is_admin:
-            return redirect(url_for('admin.dashboard'))
+            return redirect(url_for('admin.inicio'))
         elif current_user.is_collector:
-            return redirect(url_for('collectors.dashboard'))
+            return redirect(url_for('collectors.inicio'))
         else:
             return redirect(url_for('customers.dashboard'))
     
@@ -33,9 +33,9 @@ def login():
             if next_page:
                 return redirect(next_page)
             elif user.is_admin:
-                return redirect(url_for('admin.dashboard'))
+                return redirect(url_for('admin.inicio'))
             elif user.is_collector:
-                return redirect(url_for('collectors.dashboard'))
+                return redirect(url_for('collectors.inicio'))
             else:
                 return redirect(url_for('customers.dashboard'))
         else:
