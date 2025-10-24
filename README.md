@@ -63,9 +63,9 @@ Abrir frontend/index.html en el navegador (o servirlo con un servidor estático)
 ### 📚 Documentación
 
 📊 [Plan de Negocios](Documentos/plan_de_negocios.md)
-📄 [Arquitectura](docs/arquitectura.md)
-🎨 [Diseño UI](docs/ui-design.md)
-🛠 [Guía de primeros pasos](docs/primeros_pasos.md)
+📄 [Arquitectura](Documentos/arquitectura.md)
+🎨 [Diseño UI](Documentos/ui-design.md)
+🛠 [Guía de primeros pasos](Documentos/primeros_pasos.md)
 
 ---
 ### ✅ Roadmap
