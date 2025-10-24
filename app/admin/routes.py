@@ -33,7 +33,7 @@ def usuarios():
     if not current_user.is_admin:
         return "No tienes permisos", 403
     # Pasa el nombre de la ruta y usa una plantilla placeholder
-    return render_template('admin/placeholder.html', 
+    return render_template('admin/usuarios.html', 
                            route_name=get_route_name(request.endpoint))
 
 @admin_bp.route('/clientes')
@@ -41,7 +41,7 @@ def usuarios():
 def clientes():
     if not current_user.is_admin:
         return "No tienes permisos", 403
-    return render_template('admin/placeholder.html', 
+    return render_template('admin/clientes.html', 
                            route_name=get_route_name(request.endpoint))
 
 @admin_bp.route('/reportes')
@@ -49,7 +49,7 @@ def clientes():
 def reportes():
     if not current_user.is_admin:
         return "No tienes permisos", 403
-    return render_template('admin/placeholder.html', 
+    return render_template('admin/reportes.html', 
                            route_name=get_route_name(request.endpoint))
 
 @admin_bp.route('/prestamos')
@@ -57,7 +57,7 @@ def reportes():
 def prestamos():
     if not current_user.is_admin:
         return "No tienes permisos", 403
-    return render_template('admin/placeholder.html', 
+    return render_template('admin/prestamos.html', 
                            route_name=get_route_name(request.endpoint))
 
 @admin_bp.route('/cuenta')
@@ -65,7 +65,7 @@ def prestamos():
 def cuenta():
     if not current_user.is_admin:
         return "No tienes permisos", 403
-    return render_template('admin/placeholder.html', 
+    return render_template('admin/cuenta.html', 
                            route_name=get_route_name(request.endpoint))
 
 @admin_bp.after_request

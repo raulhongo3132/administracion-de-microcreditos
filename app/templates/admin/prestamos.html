@@ -1,0 +1,7 @@
+{% extends "base_admin.html" %}
+{% block title %}{{ route_name }}{% endblock %}
+{% block content %}
+    <h1>{{ route_name }}</h1>
+    <p>Gestión de préstamos - En desarrollo</p>
+    <p>Usuario actual: {{ current_user.name | default('Administrador') }}</p>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends "base_collector.html" %}
+{% block title %}{{ route_name }}{% endblock %}
+{% block content %}
+    <h1>{{ route_name }}</h1>
+    <p>Gestión de clientes asignados - En desarrollo</p>
+    <p>Cobrador: {{ current_user.name | default('Cobrador') }}</p>
+{% endblock %}

@@ -28,9 +28,9 @@ def inicio():
 @collectors_bp.route('/clientes')
 @login_required
 def clientes():
-    if not current_user.id_collector:
+    if not current_user.is_collector:
         return "No tienes permisos", 403
-    return render_template('collectors/placeholder.html', 
+    return render_template('collectors/clientes.html', 
                            route_name=get_route_name(request.endpoint))
 
 @collectors_bp.route('/reportes')
@@ -38,7 +38,7 @@ def clientes():
 def reportes():
     if not current_user.is_collector:
         return "No tienes permisos", 403
-    return render_template('collectors/placeholder.html', 
+    return render_template('collectors/reportes.html', 
                            route_name=get_route_name(request.endpoint))
 
 @collectors_bp.route('/cuenta')
@@ -46,7 +46,7 @@ def reportes():
 def cuenta():
     if not current_user.is_collector:
         return "No tienes permisos", 403
-    return render_template('collectors/placeholder.html', 
+    return render_template('collectors/cuenta.html', 
                            route_name=get_route_name(request.endpoint))
 
 @collectors_bp.after_request
