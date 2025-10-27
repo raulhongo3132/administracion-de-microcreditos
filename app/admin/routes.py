@@ -1,5 +1,8 @@
-from flask import Blueprint, render_template, request, after_this_request
+from flask import Blueprint, render_template, request, after_this_request, flash, redirect, url_for
 from flask_login import login_required, current_user
+from app.forms import UserRegistrationForm
+from app.models import User
+from app import db
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -11,6 +14,7 @@ ROUTE_NAMES = {
     'admin.reportes': 'Reportes',
     'admin.prestamos': 'Préstamos',
     'admin.cuenta': 'Cuenta',
+    'admin.registrar_cobrador': 'Registrar cobrador',
 }
 
 def get_route_name(endpoint):
@@ -66,6 +70,45 @@ def cuenta():
     if not current_user.is_admin:
         return "No tienes permisos", 403
     return render_template('admin/cuenta.html', 
+                           route_name=get_route_name(request.endpoint))
+
+@admin_bp.route('/registrar_cobrador', methods=['GET', 'POST'])
+@login_required
+def registrar_cobrador():
+    if not current_user.is_admin:
+        flash('No tienes permisos para acceder a esta página.', 'error')
+        return redirect(url_for('admin.inicio'))
+    
+    form = UserRegistrationForm()
+    
+    # Si es una petición GET, establecer el rol por defecto como 'collector'
+    if request.method == 'GET':
+        form.rol.data = 'collector'
+    
+    if form.validate_on_submit():
+        try:
+            # Crear el nuevo usuario
+            user = User(
+                name=form.name.data,
+                username=form.username.data,
+                phone=form.phone.data,
+                rol=form.rol.data
+            )
+            user.set_password(form.password.data)
+            
+            db.session.add(user)
+            db.session.commit()
+            
+            flash(f'Usuario {form.username.data} registrado exitosamente!', 'success')
+            return redirect(url_for('admin.usuarios'))  # Redirigir a la lista de usuarios
+            
+        except Exception as e:
+            db.session.rollback()
+            flash('Error al registrar el usuario. Intenta nuevamente.', 'error')
+    
+    # Pasa el nombre de la ruta a la plantilla
+    return render_template('admin/registrar_cobrador.html', 
+                           form=form,
                            route_name=get_route_name(request.endpoint))
 
 @admin_bp.after_request
