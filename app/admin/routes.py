@@ -36,9 +36,14 @@ def inicio():
 def usuarios():
     if not current_user.is_admin:
         return "No tienes permisos", 403
-    # Pasa el nombre de la ruta y usa una plantilla placeholder
+    
+    # Obtener todos los usuarios de la base de datos
+    usuarios = User.query.all()
+    
+    # Pasa el nombre de la ruta y la lista de usuarios a la plantilla
     return render_template('admin/usuarios.html', 
-                           route_name=get_route_name(request.endpoint))
+                           route_name=get_route_name(request.endpoint),
+                           usuarios=usuarios)
 
 @admin_bp.route('/clientes')
 @login_required
