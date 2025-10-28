@@ -1,5 +1,8 @@
 {% extends "base_admin.html" %}
 {% block title %}{{ route_name }}{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin/registrar_usuario.css') }}">
+{% endblock %}
 {% block content %}
 <div class="container mt-4">
     <div class="row justify-content-center">

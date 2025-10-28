@@ -1,0 +1,157 @@
+/* =========================================
+   FORMULARIO REGISTRAR USUARIO / COBRADOR
+   ========================================= */
+:root {
+    --negro: #000;
+    --gris-borde: #dcdcdc;
+    --gris-fondo: #f5f5f5;
+    --gris-texto: #333;
+    --blanco: #fff;
+    --radius: 12px;
+    --fuente: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+    background-color: var(--gris-fondo);
+    font-family: var(--fuente);
+    color: var(--gris-texto);
+}
+
+/* Centrar la tarjeta en pantallas grandes */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: calc(100vh - 120px);
+}
+
+/* === Tarjeta principal === */
+.card {
+    width: 100%;
+    max-width: 520px;
+    border: none;
+    border-radius: var(--radius);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+/* === Encabezado (negro con texto blanco) === */
+.card-header {
+    background-color: var(--negro);
+    color: var(--blanco);
+    padding: 1rem 1.5rem;
+    text-align: center;
+}
+
+.card-header h4 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+/* === Cuerpo del formulario === */
+.card-body {
+    background-color: var(--blanco);
+    padding: 2rem;
+}
+
+/* Etiquetas */
+.form-label {
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 6px;
+}
+
+/* Inputs y selects */
+.form-control,
+.form-select {
+    border-radius: var(--radius);
+    border: 1px solid var(--gris-borde);
+    padding: 10px 12px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--negro);
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
+    outline: none;
+}
+
+/* Mensajes de error */
+.text-danger small {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.85rem;
+}
+
+/* === Botones === */
+.btn-primary {
+    background-color: var(--negro);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    padding: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #222;
+}
+
+.btn-secondary {
+    background-color: #e5e5e5;
+    color: #333;
+    border: none;
+    border-radius: var(--radius);
+    padding: 10px 18px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #d5d5d5;
+}
+
+/* === Espaciado final === */
+.text-center.mt-3 {
+    margin-top: 25px !important;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+    .container {
+        align-items: center;
+        padding: 0 15px;
+    }
+
+    .card {
+        max-width: 100%;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+}
+/* =========================================
+   FORMATO: ETIQUETA ARRIBA DEL INPUT
+   ========================================= */
+.mb-3 {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #444;
+}
+
+.form-control,
+.form-select {
+    margin-top: 2px;
+}
