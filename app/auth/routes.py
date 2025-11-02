@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from datetime import datetime, timedelta
 from app.auth import auth_bp  # Importar desde el mismo módulo
 from app.models import User, RecoveryCode
-from app.forms import LoginForm, PasswordRecoveryForm, CodeVerificationForm, ResetPasswordForm
+from app.auth.forms import LoginForm, PasswordRecoveryForm, CodeVerificationForm, ResetPasswordForm
 from app import db
 import random
 

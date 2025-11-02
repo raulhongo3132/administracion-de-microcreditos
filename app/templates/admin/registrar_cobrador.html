@@ -50,6 +50,18 @@
                                 </div>
                             {% endif %}
                         </div>
+
+                        <div class="mb-3">
+                            {{ form.email.label(class="form-label") }}
+                            {{ form.email(class="form-control", placeholder="Ej: ejemplo@ejemplo.mx") }}
+                            {% if form.email.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.email.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
                         
                         <div class="mb-3">
                             {{ form.rol.label(class="form-label") }}

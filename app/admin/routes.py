@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, after_this_request, flash, redirect, url_for
 from flask_login import login_required, current_user
-from app.forms import UserRegistrationForm
+from app.admin.forms import UserRegistrationForm
 from app.models import User
 from app import db
 
@@ -12,7 +12,6 @@ ROUTE_NAMES = {
     'admin.usuarios': 'Usuarios',
     'admin.clientes': 'Clientes',
     'admin.reportes': 'Reportes',
-    'admin.prestamos': 'Préstamos',
     'admin.cuenta': 'Cuenta',
     'admin.registrar_cobrador': 'Registrar cobrador',
 }
@@ -31,17 +30,15 @@ def inicio():
     return render_template('admin/inicio.html', 
                            route_name=get_route_name(request.endpoint))
 
-@admin_bp.route('/usuarios')
+@admin_bp.route('/cobradores')
 @login_required
-def usuarios():
+def cobradores():
     if not current_user.is_admin:
         return "No tienes permisos", 403
     
-    # Obtener todos los usuarios de la base de datos
     usuarios = User.query.all()
     
-    # Pasa el nombre de la ruta y la lista de usuarios a la plantilla
-    return render_template('admin/usuarios.html', 
+    return render_template('admin/cobradores.html', 
                            route_name=get_route_name(request.endpoint),
                            usuarios=usuarios)
 
@@ -61,14 +58,6 @@ def reportes():
     return render_template('admin/reportes.html', 
                            route_name=get_route_name(request.endpoint))
 
-@admin_bp.route('/prestamos')
-@login_required
-def prestamos():
-    if not current_user.is_admin:
-        return "No tienes permisos", 403
-    return render_template('admin/prestamos.html', 
-                           route_name=get_route_name(request.endpoint))
-
 @admin_bp.route('/cuenta')
 @login_required
 def cuenta():
@@ -86,7 +75,6 @@ def registrar_cobrador():
     
     form = UserRegistrationForm()
     
-    # Si es una petición GET, establecer el rol por defecto como 'collector'
     if request.method == 'GET':
         form.rol.data = 'collector'
     
@@ -97,6 +85,7 @@ def registrar_cobrador():
                 name=form.name.data,
                 username=form.username.data,
                 phone=form.phone.data,
+                email=form.email.data,
                 rol=form.rol.data
             )
             user.set_password(form.password.data)
@@ -104,7 +93,6 @@ def registrar_cobrador():
             db.session.add(user)
             db.session.commit()
             
-            flash(f'Usuario {form.username.data} registrado exitosamente!', 'success')
             return redirect(url_for('admin.usuarios'))  # Redirigir a la lista de usuarios
             
         except Exception as e:
@@ -122,12 +110,10 @@ def add_security_headers_admin(response):
     Añade encabezados para evitar el caching de las páginas de administración, 
     solucionando el problema del botón 'Atrás' después de cerrar sesión o entrar.
     """
-    # Evita que la página se almacene en caché en el historial del navegador
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "0"
-    
-    # Previene el "iframe-jacking" (opcional pero buena práctica)
+
     response.headers["X-Frame-Options"] = "SAMEORIGIN"
     
     return response
