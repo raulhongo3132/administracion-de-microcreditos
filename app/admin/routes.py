@@ -9,7 +9,7 @@ admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 # Mapeo de endpoints de Flask a nombres amigables para el encabezado
 ROUTE_NAMES = {
     'admin.inicio': 'Inicio',
-    'admin.usuarios': 'Usuarios',
+    'admin.cobradores': 'Cobradores',
     'admin.clientes': 'Clientes',
     'admin.reportes': 'Reportes',
     'admin.cuenta': 'Cuenta',
