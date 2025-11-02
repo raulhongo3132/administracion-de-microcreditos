@@ -11,6 +11,7 @@ with app.app_context():
             name='Administrador principal',
             username='admin',
             phone='5562540486',
+            email='admin123@micro.mx',
             rol='admin'
         )
         admin.set_password('admin123')

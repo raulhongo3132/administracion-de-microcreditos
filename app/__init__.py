@@ -29,13 +29,15 @@ def create_app():
     with app.app_context():
         from app.auth.routes import auth_bp
         from app.admin.routes import admin_bp
-        from app.customers.routes import customers_bp
         from app.collectors.routes import collectors_bp
+        # Si no tienes loans_bp, elimina esta línea
+        # from app.loans.routes import loans_bp
         
         app.register_blueprint(auth_bp)
         app.register_blueprint(admin_bp)
-        app.register_blueprint(customers_bp)
         app.register_blueprint(collectors_bp)
+        # Si no tienes loans_bp, elimina esta línea
+        # app.register_blueprint(loans_bp)
 
     @app.route('/')
     def index():
@@ -45,10 +47,18 @@ def create_app():
                 return redirect(url_for('admin.inicio'))
             elif current_user.is_collector:
                 return redirect(url_for('collectors.inicio'))
-            else:
-                return redirect(url_for('customers.dashboard'))
+            # Eliminado el redirect para 'customer' ya que ahora son entidades separadas
         else:
-            # Si no está autenticado, ir al login
             return redirect(url_for('auth.login'))
+    
+    # Manejo de errores personalizado
+    @app.errorhandler(404)
+    def not_found_error(error):
+        return redirect(url_for('auth.login'))
+    
+    @app.errorhandler(500)
+    def internal_error(error):
+        db.session.rollback()
+        return redirect(url_for('auth.login'))
     
     return app

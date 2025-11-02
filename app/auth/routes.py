@@ -47,10 +47,10 @@ def login():
 def password_recovery():
     form = PasswordRecoveryForm()
     if form.validate_on_submit():
-        phone = form.phone.data
+        email = form.email.data
         
         # Buscar usuario por teléfono
-        user = User.query.filter_by(phone=phone, status=True).first()
+        user = User.query.filter_by(email=email, status=True).first()
         
         if user:
             # Generar código de 6 dígitos
@@ -76,10 +76,10 @@ def password_recovery():
             # ⚠️ EN PRODUCCIÓN: Aquí integrarías con un servicio SMS como Twilio
             print(f"🔐 Código de recuperación para {user.name}: {code}")
             
-            flash(f'Se ha enviado un código de verificación al teléfono {phone}', 'success')
+            flash(f'Se ha enviado un código de verificación al teléfono {email}', 'success')
             return redirect(url_for('auth.verify_code', user_id=user.id))
         else:
-            flash('No se encontró una cuenta con ese número de teléfono', 'error')
+            flash('No se encontró una cuenta con ese correo electronico', 'error')
     
     return render_template('auth/password_recovery.html', form=form)
 
