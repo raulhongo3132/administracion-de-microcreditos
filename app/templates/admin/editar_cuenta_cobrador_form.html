@@ -12,20 +12,36 @@
                 <h4 class="mb-0">Editar Cuenta: {{ cobrador.username }}</h4>
             </div>
             <div class="card-body">
-                <form method="POST" action="{{ url_for('admin.actualizar_cuenta_cobrador', id=cobrador.id) }}">
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    
                     <div class="form-group">
-                        <label class="form-label">Usuario</label>
-                        <input type="text" name="username" value="{{ cobrador.username }}" class="form-control" required>
+                        {{ form.username.label(class="form-label") }}
+                        {{ form.username(class="form-control") }}
+                        {% if form.username.errors %}
+                            <div class="text-danger">
+                                {% for error in form.username.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label">Nueva Contraseña</label>
-                        <input type="password" name="password" class="form-control" placeholder="Dejar vacío para no cambiar">
-                        <div class="form-text">Mínimo 6 caracteres</div>
+                        {{ form.password.label(class="form-label") }}
+                        {{ form.password(class="form-control", placeholder="Dejar vacío para no cambiar") }}
+                        {% if form.password.errors %}
+                            <div class="text-danger">
+                                {% for error in form.password.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">Mínimo 6 caracteres, con mayúscula, minúscula y número</div>
                     </div>
                     
                     <div class="button-group">
-                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                        {{ form.submit(class="btn btn-primary") }}
                         <a href="{{ url_for('admin.cobradores') }}" class="btn btn-secondary">Cancelar</a>
                     </div>
                 </form>

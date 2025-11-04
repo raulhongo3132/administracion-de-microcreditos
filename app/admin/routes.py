@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 from flask_login import login_required, current_user
-from app.admin.forms import UserRegistrationForm
+from app.admin.forms import UserRegistrationForm, CobradorEditForm, CuentaCobradorEditForm  
 from app.models import User, CollectorAssignment, Customer
 from app import db
 from werkzeug.security import generate_password_hash
@@ -168,7 +168,7 @@ def registrar_cobrador():
 # RUTAS PARA FORMULARIOS DE EDICIÓN (AGREGAR ESTAS)
 # -------------------------------------------------------------
 
-@admin_bp.route('/editar_cobrador_form/<int:id>')
+@admin_bp.route('/editar_cobrador_form/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def editar_cobrador_form(id):
@@ -177,11 +177,35 @@ def editar_cobrador_form(id):
         return redirect(url_for('admin.cobradores'))
     
     cobrador = User.query.get_or_404(id)
+    form = CobradorEditForm()
+    
+    # Si es GET, llenar el formulario con los datos actuales
+    if request.method == 'GET':
+        form.name.data = cobrador.name
+        form.phone.data = cobrador.phone
+        form.email.data = cobrador.email
+    
+    # Si es POST, validar y guardar
+    if form.validate_on_submit():
+        try:
+            cobrador.name = form.name.data
+            cobrador.phone = form.phone.data
+            cobrador.email = form.email.data
+            
+            db.session.commit()
+            flash('Cobrador actualizado correctamente.', 'success')
+            return redirect(url_for('admin.cobradores'))
+            
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error al actualizar el cobrador: {str(e)}', 'error')
+    
     return render_template('admin/editar_cobrador_form.html', 
+                         form=form,
                          cobrador=cobrador,
                          route_name=get_route_name(request.endpoint))
 
-@admin_bp.route('/editar_cuenta_cobrador_form/<int:id>')
+@admin_bp.route('/editar_cuenta_cobrador_form/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def editar_cuenta_cobrador_form(id):
@@ -190,31 +214,41 @@ def editar_cuenta_cobrador_form(id):
         return redirect(url_for('admin.cobradores'))
     
     cobrador = User.query.get_or_404(id)
+    form = CuentaCobradorEditForm()
+    
+    # Si es GET, llenar el formulario con los datos actuales
+    if request.method == 'GET':
+        form.username.data = cobrador.username
+    
+    # Si es POST, validar y guardar
+    if form.validate_on_submit():
+        try:
+            if form.username.data != cobrador.username:
+                # Verificar si el nuevo username ya existe
+                if User.query.filter(User.username == form.username.data, User.id != id).first():
+                    flash('El nombre de usuario ya está en uso.', 'error')
+                    return render_template('admin/editar_cuenta_cobrador_form.html', 
+                                         form=form,
+                                         cobrador=cobrador,
+                                         route_name=get_route_name(request.endpoint))
+                cobrador.username = form.username.data
+            
+            if form.password.data:  # Solo actualizar si se proporcionó nueva contraseña
+                cobrador.set_password(form.password.data)
+            
+            db.session.commit()
+            flash('Credenciales actualizadas correctamente.', 'success')
+            return redirect(url_for('admin.cobradores'))
+            
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error al actualizar las credenciales: {str(e)}', 'error')
+    
     return render_template('admin/editar_cuenta_cobrador_form.html', 
+                         form=form,
                          cobrador=cobrador,
                          route_name=get_route_name(request.endpoint))
-
-@admin_bp.route('/editar_cobrador/<int:id>', methods=['POST'])
-@login_required
-@admin_required
-def editar_cobrador(id):
-    if not check_assignment(id, current_user.id):
-        flash('No tienes permisos para editar este cobrador.', 'error')
-        return redirect(url_for('admin.cobradores'))
     
-    cobrador = User.query.get_or_404(id)
-    
-    try:
-        cobrador.name = request.form.get('name', cobrador.name)
-        cobrador.phone = request.form.get('phone', cobrador.phone)
-        db.session.commit()
-        flash('Cobrador actualizado correctamente.', 'success')
-    except Exception as e:
-        db.session.rollback()
-        flash(f'Error al actualizar el cobrador: {str(e)}', 'error')
-    
-    return redirect(url_for('admin.cobradores'))
-
 @admin_bp.route('/actualizar_cuenta_cobrador/<int:id>', methods=['POST'])
 @login_required
 @admin_required
