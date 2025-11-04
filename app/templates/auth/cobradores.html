@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/cobradores.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="cobradores-container">
+    <h1>Cobradores</h1>
+    <button class="btn-agregar" id="btnAbrirAgregar">+ Agregar cobrador</button>
+
+    <div class="tabla-cobradores">
+        <!-- Tabla de cobradores -->
+    </div>
+
+    <!-- Modales (ocultos por defecto) -->
+    {% include 'modales/agregar_cobrador.html' %}
+    {% include 'modales/editar_cobrador.html' %}
+    {% include 'modales/editar_cuenta.html' %}
+    {% include 'modales/confirmar_desactivacion.html' %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/cobradores.js') }}"></script>
+{% endblock %}
