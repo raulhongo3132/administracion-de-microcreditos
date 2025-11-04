@@ -1,7 +1,37 @@
 {% extends "base_admin.html" %}
-{% block title %}{{ route_name }}{% endblock %}
 {% block content %}
-    <h1>{{ route_name }}</h1>
-    <p>Gestión de clientes - En desarrollo</p>
-    <p>Usuario actual: {{ current_user.name | default('Administrador') }}</p>
+<div class="container mt-4">
+    <h2 class="mb-3">Clientes asignados a {{ cobrador.name }}</h2>
+
+    {% if clientes %}
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
+                    <th>Préstamos activos</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cliente in clientes %}
+                <tr>
+                    <td>{{ cliente.id }}</td>
+                    <td>{{ cliente.nombre }}</td>
+                    <td>{{ cliente.telefono }}</td>
+                    <td>{{ cliente.direccion }}</td>
+                    <td>{{ cliente.prestamos|length }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p>No hay clientes asignados a este cobrador.</p>
+    {% endif %}
+
+    <a href="{{ url_for('admin.cobradores') }}" class="btn btn-secondary mt-3">⬅ Volver</a>
+</div>
 {% endblock %}

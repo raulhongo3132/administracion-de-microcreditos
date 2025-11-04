@@ -11,7 +11,8 @@ with app.app_context():
             name='Colector Principal',
             username='collector',
             phone='0987654321',
-            rol='collector'
+            rol='collector',
+            email='a@gmail.com'
         )
         collector.set_password('collector123')
         db.session.add(collector)
