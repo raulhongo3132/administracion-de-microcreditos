@@ -1,0 +1,40 @@
+{% extends "base_admin.html" %}
+{% block title %}Editar Cobrador{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin/formularios.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-content">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Editar Cobrador: {{ cobrador.name }}</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('admin.editar_cobrador', id=cobrador.id) }}">
+                    <div class="form-group">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" name="name" value="{{ cobrador.name }}" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Teléfono</label>
+                        <input type="text" name="phone" value="{{ cobrador.phone }}" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" value="{{ cobrador.email }}" class="form-control" required>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                        <a href="{{ url_for('admin.cobradores') }}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

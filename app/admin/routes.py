@@ -1,14 +1,13 @@
-from flask import Blueprint, render_template, request, after_this_request, flash, redirect, url_for, jsonify
+from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 from flask_login import login_required, current_user
 from app.admin.forms import UserRegistrationForm
-from app.models import User, CollectorAssignment # Importa la clase de asignación
+from app.models import User, CollectorAssignment, Customer
 from app import db
 from werkzeug.security import generate_password_hash
 
 # Define el Blueprint
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
-# Mapeo de endpoints de Flask a nombres amigables para el encabezado
 ROUTE_NAMES = {
     'admin.inicio': 'Inicio',
     'admin.cobradores': 'Cobradores',
@@ -16,22 +15,52 @@ ROUTE_NAMES = {
     'admin.reportes': 'Reportes',
     'admin.cuenta': 'Cuenta',
     'admin.registrar_cobrador': 'Registrar cobrador',
+    'admin.editar_cobrador_form': 'Editar Cobrador',  # AGREGAR
+    'admin.editar_cuenta_cobrador_form': 'Editar Cuenta',  # AGREGAR
+    'admin.clientes_por_cobrador': 'Clientes del Cobrador',  # AGREGAR
 }
 
 def get_route_name(endpoint):
-    """Obtiene el nombre amigable de la ruta para el encabezado del dashboard."""
     return ROUTE_NAMES.get(endpoint, 'Panel de Administración')
 
 # -------------------------------------------------------------
-# Funciones Auxiliares de Seguridad
+# Funciones Auxiliares
 # -------------------------------------------------------------
 
 def check_assignment(collector_user_id, admin_user_id):
-    """Verifica si el User (Collector) está asignado al User (Admin) logueado."""
+    """Verifica si un cobrador está asignado al admin"""
     return CollectorAssignment.query.filter_by(
         admin_id=admin_user_id,
         collector_id=collector_user_id
     ).first()
+
+def get_assigned_collectors(admin_id):
+    """Obtiene todos los cobradores asignados a un admin"""
+    assigned_ids = db.session.query(CollectorAssignment.collector_id).filter(
+        CollectorAssignment.admin_id == admin_id
+    ).subquery()
+    return User.query.filter(User.id.in_(assigned_ids))
+
+def get_customer_count_by_collector(collector_id):
+    """Obtiene el número de clientes activos asignados a un cobrador"""
+    return Customer.query.filter_by(
+        collector_id=collector_id, 
+        status=True
+    ).count()
+
+# -------------------------------------------------------------
+# DECORADORES PERSONALIZADOS
+# -------------------------------------------------------------
+
+def admin_required(f):
+    """Decorator para requerir permisos de admin"""
+    from functools import wraps
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_admin:
+            return "No tienes permisos para acceder a esta página", 403
+        return f(*args, **kwargs)
+    return decorated_function
 
 # -------------------------------------------------------------
 # RUTAS DE VISTA (HTML)
@@ -39,298 +68,274 @@ def check_assignment(collector_user_id, admin_user_id):
 
 @admin_bp.route('/inicio')
 @login_required
+@admin_required
 def inicio():
-    if not current_user.is_admin:
-        return "No tienes permisos para acceder a esta página", 403
-    
-    return render_template('admin/inicio.html', 
-                           route_name=get_route_name(request.endpoint))
+    return render_template('admin/inicio.html', route_name=get_route_name(request.endpoint))
 
 @admin_bp.route('/cobradores')
 @login_required
+@admin_required
 def cobradores():
-    if not current_user.is_admin:
-        return "No tienes permisos", 403
+    usuarios = get_assigned_collectors(current_user.id).all()
     
-    # TAREA: Modificar queries para que admin solo vea sus relaciones
-    assigned_collector_ids = db.session.query(CollectorAssignment.collector_id).filter(
-        CollectorAssignment.admin_id == current_user.id
-    ).subquery() 
+    # Búsqueda
+    query = request.args.get('q', '')
+    if query:
+        usuarios = [u for u in usuarios if query.lower() in u.name.lower() or 
+                  (u.phone and query in u.phone)]
     
-    # Filtra los usuarios para mostrar solo los que tienen una asignación con el admin logueado
-    usuarios = User.query.filter(User.id.in_(assigned_collector_ids)).all()
+    # Contar clientes por cobrador
+    for usuario in usuarios:
+        usuario.clientes_asignados = get_customer_count_by_collector(usuario.id)
     
     return render_template('admin/cobradores.html', 
-                           route_name=get_route_name(request.endpoint),
-                           usuarios=usuarios)
+                         route_name=get_route_name(request.endpoint), 
+                         usuarios=usuarios,
+                         search_query=query)
 
 @admin_bp.route('/clientes')
 @login_required
+@admin_required
 def clientes():
-    if not current_user.is_admin:
-        return "No tienes permisos", 403
-    return render_template('admin/clientes.html', 
-                           route_name=get_route_name(request.endpoint))
+    return render_template('admin/clientes.html', route_name=get_route_name(request.endpoint))
 
 @admin_bp.route('/reportes')
 @login_required
+@admin_required
 def reportes():
-    if not current_user.is_admin:
-        return "No tienes permisos", 403
-    return render_template('admin/reportes.html', 
-                           route_name=get_route_name(request.endpoint))
+    return render_template('admin/reportes.html', route_name=get_route_name(request.endpoint))
 
 @admin_bp.route('/cuenta')
 @login_required
+@admin_required
 def cuenta():
-    if not current_user.is_admin:
-        return "No tienes permisos", 403
-    return render_template('admin/cuenta.html', 
-                           route_name=get_route_name(request.endpoint))
+    return render_template('admin/cuenta.html', route_name=get_route_name(request.endpoint))
 
 @admin_bp.route('/registrar_cobrador', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def registrar_cobrador():
-    if not current_user.is_admin:
-        flash('No tienes permisos para acceder a esta página.', 'error')
-        return redirect(url_for('admin.inicio'))
-    
     form = UserRegistrationForm()
     
+    # Forzar el rol a 'collector' tanto en GET como en POST
     if request.method == 'GET':
         form.rol.data = 'collector'
     
     if form.validate_on_submit():
         try:
-            # Crear el nuevo usuario
-            user = User(
+            # Forzar el rol a collector (por si acaso)
+            form.rol.data = 'collector'
+            
+            # Tus validaciones personalizadas ya están en el formulario
+            # así que no necesitas repetirlas aquí
+            
+            cobrador = User(
                 name=form.name.data,
                 username=form.username.data,
                 phone=form.phone.data,
                 email=form.email.data,
-                # Asumiendo que 'rol' mapea a is_collector/is_admin en tu modelo User
-                rol=form.rol.data 
+                rol=form.rol.data,  # Siempre será 'collector'
+                status=True
             )
-            # Asumiendo que user.set_password() existe o usamos la asignación directa
-            user.password_hash = generate_password_hash(form.password.data)
+            cobrador.set_password(form.password.data)
             
-            db.session.add(user)
-            db.session.flush() # Obtiene el user.id antes de commit
+            db.session.add(cobrador)
+            db.session.flush()
             
-            # TAREA CRUCIAL: Asignar el nuevo cobrador al admin logueado
-            new_assignment = CollectorAssignment(
+            asignacion = CollectorAssignment(
                 admin_id=current_user.id,
-                collector_id=user.id 
+                collector_id=cobrador.id
             )
-            db.session.add(new_assignment)
+            db.session.add(asignacion)
             db.session.commit()
             
             flash('Cobrador registrado y asignado con éxito.', 'success')
-            
-            return redirect(url_for('admin.cobradores')) 
+            return redirect(url_for('admin.cobradores'))
             
         except Exception as e:
             db.session.rollback()
-            flash(f'Error al registrar el usuario: {str(e)}', 'error')
+            flash(f'Error al registrar el cobrador: {str(e)}', 'error')
     
     return render_template('admin/registrar_cobrador.html', 
-                           form=form,
-                           route_name=get_route_name(request.endpoint))
+                         form=form, 
+                         route_name=get_route_name(request.endpoint))
 
 # -------------------------------------------------------------
-# ENDPOINTS - GESTIÓN DE COBRADORES
+# RUTAS PARA ACCIONES ESPECÍFICAS (HTML)
 # -------------------------------------------------------------
 
-# ENDPOINT 1: GET /admin/collectors (API Lectura)
-@admin_bp.route('/collectors', methods=['GET']) 
-@login_required 
-def get_collectors_api():
-    if not current_user.is_admin: 
-         return jsonify({"message": "Acceso no autorizado. Se requiere rol de administrador."}), 403
-         
-    admin_id = current_user.id
+# -------------------------------------------------------------
+# RUTAS PARA FORMULARIOS DE EDICIÓN (AGREGAR ESTAS)
+# -------------------------------------------------------------
+
+@admin_bp.route('/editar_cobrador_form/<int:id>')
+@login_required
+@admin_required
+def editar_cobrador_form(id):
+    if not check_assignment(id, current_user.id):
+        flash('No tienes permisos para editar este cobrador.', 'error')
+        return redirect(url_for('admin.cobradores'))
     
-    assigned_collector_ids = db.session.query(CollectorAssignment.collector_id).filter(
-        CollectorAssignment.admin_id == admin_id
-    ).subquery() 
+    cobrador = User.query.get_or_404(id)
+    return render_template('admin/editar_cobrador_form.html', 
+                         cobrador=cobrador,
+                         route_name=get_route_name(request.endpoint))
 
-    all_collectors = User.query.filter(
-        User.id.in_(assigned_collector_ids)
+@admin_bp.route('/editar_cuenta_cobrador_form/<int:id>')
+@login_required
+@admin_required
+def editar_cuenta_cobrador_form(id):
+    if not check_assignment(id, current_user.id):
+        flash('No tienes permisos para editar este cobrador.', 'error')
+        return redirect(url_for('admin.cobradores'))
+    
+    cobrador = User.query.get_or_404(id)
+    return render_template('admin/editar_cuenta_cobrador_form.html', 
+                         cobrador=cobrador,
+                         route_name=get_route_name(request.endpoint))
+
+@admin_bp.route('/editar_cobrador/<int:id>', methods=['POST'])
+@login_required
+@admin_required
+def editar_cobrador(id):
+    if not check_assignment(id, current_user.id):
+        flash('No tienes permisos para editar este cobrador.', 'error')
+        return redirect(url_for('admin.cobradores'))
+    
+    cobrador = User.query.get_or_404(id)
+    
+    try:
+        cobrador.name = request.form.get('name', cobrador.name)
+        cobrador.phone = request.form.get('phone', cobrador.phone)
+        db.session.commit()
+        flash('Cobrador actualizado correctamente.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error al actualizar el cobrador: {str(e)}', 'error')
+    
+    return redirect(url_for('admin.cobradores'))
+
+@admin_bp.route('/actualizar_cuenta_cobrador/<int:id>', methods=['POST'])
+@login_required
+@admin_required
+def actualizar_cuenta_cobrador(id):
+    if not check_assignment(id, current_user.id):
+        flash('No tienes permisos para editar este cobrador.', 'error')
+        return redirect(url_for('admin.cobradores'))
+    
+    cobrador = User.query.get_or_404(id)
+    
+    try:
+        nuevo_username = request.form.get('username')
+        nueva_password = request.form.get('password')
+        
+        if nuevo_username and nuevo_username != cobrador.username:
+            # Verificar si el nuevo username ya existe
+            if User.query.filter(User.username == nuevo_username, User.id != id).first():
+                flash('El nombre de usuario ya está en uso.', 'error')
+                return redirect(url_for('admin.cobradores'))
+            cobrador.username = nuevo_username
+        
+        if nueva_password:
+            cobrador.set_password(nueva_password)
+        
+        db.session.commit()
+        flash('Credenciales actualizadas correctamente.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error al actualizar las credenciales: {str(e)}', 'error')
+    
+    return redirect(url_for('admin.cobradores'))
+
+@admin_bp.route('/cambiar_estado_cobrador/<int:id>/<estado>')
+@login_required
+@admin_required
+def cambiar_estado_cobrador(id, estado):
+    if not check_assignment(id, current_user.id):
+        flash('No tienes permisos para modificar este cobrador.', 'error')
+        return redirect(url_for('admin.cobradores'))
+    
+    cobrador = User.query.get_or_404(id)
+    
+    try:
+        if estado == 'activo':
+            cobrador.status = True
+            mensaje = 'Cobrador activado correctamente.'
+        elif estado == 'inactivo':
+            cobrador.status = False
+            mensaje = 'Cobrador desactivado correctamente.'
+        else:
+            flash('Estado no válido.', 'error')
+            return redirect(url_for('admin.cobradores'))
+        
+        db.session.commit()
+        flash(mensaje, 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error al cambiar el estado: {str(e)}', 'error')
+    
+    return redirect(url_for('admin.cobradores'))
+
+@admin_bp.route('/clientes_por_cobrador/<int:id>')
+@login_required
+@admin_required
+def clientes_por_cobrador(id):
+    if not check_assignment(id, current_user.id):
+        flash('No tienes permisos para ver los clientes de este cobrador.', 'error')
+        return redirect(url_for('admin.cobradores'))
+    
+    cobrador = User.query.get_or_404(id)
+    clientes = Customer.query.filter_by(
+        collector_id=id, 
+        status=True
     ).all()
     
-    active_collectors = []
-    inactive_collectors = []
-    
-    for user in all_collectors:
-        # Contar clientes asignados usando la relación definida
-        assigned_customers_count = user.customers_as_collector.count() 
-        
-        collector_data = {
-            "id": user.id,
-            "name": user.name,
-            "phone": user.phone,
-            "email": user.email,
-            "username": user.username,
-            "assigned_customers_count": assigned_customers_count, 
-            "status": user.status,
-            "last_connection": user.last_connection.isoformat() if user.last_connection else None
-        }
-
-        if user.status:
-            active_collectors.append(collector_data)
-        else:
-            inactive_collectors.append(collector_data)
-            
-    return jsonify({
-        "active_collectors": active_collectors,
-        "inactive_collectors": inactive_collectors
-    }), 200
-
-# ENDPOINT 2: POST /admin/collectors (API Creación JSON)
-@admin_bp.route('/collectors', methods=['POST'])
-@login_required
-def add_collector_api():
-    if not current_user.is_admin:
-         return jsonify({"message": "Acceso no autorizado."}), 403
-         
-    data = request.get_json()
-    
-    # VALIDACIÓN DE UNICIDAD
-    if User.query.filter_by(email=data.get('email')).first():
-        return jsonify({"message": "El email ya está registrado."}), 400
-    if User.query.filter_by(username=data.get('username')).first():
-        return jsonify({"message": "El username ya está registrado."}), 400
-
-    new_collector_user = User(
-        name=data.get('name'),
-        phone=data.get('phone', None), 
-        email=data.get('email'),
-        username=data.get('username'),
-        is_collector=True, 
-        is_admin=False,
-        status=True,
-        rol='collector' 
-    )
-    
-    # HASH DE CONTRASEÑA
-    new_collector_user.password_hash = generate_password_hash(data.get('password'))
-
-    try:
-        db.session.add(new_collector_user)
-        db.session.flush() 
-        
-        # ASIGNACIÓN OBLIGATORIA AL CREAR
-        new_assignment = CollectorAssignment(
-            admin_id=current_user.id,
-            collector_id=new_collector_user.id 
-        )
-        db.session.add(new_assignment)
-        db.session.commit()
-        
-        return jsonify({"message": "Cobrador creado y asignado con éxito.", "id": new_collector_user.id}), 201
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"message": f"Error al crear el cobrador: {str(e)}"}), 500
-
-# ENDPOINT 3: PUT  (Edición de Información Básica)
-@admin_bp.route('/collectors/<int:id>', methods=['PUT'])
-@login_required
-def edit_collector_api(id):
-    if not current_user.is_admin:
-         return jsonify({"message": "Acceso no autorizado."}), 403
-         
-    # CONTROL DE SEGURIDAD: Solo editar cobradores asignados
-    if not check_assignment(id, current_user.id):
-        return jsonify({"message": "No tiene permiso para editar este cobrador."}), 403
-
-    collector_user = User.query.get_or_404(id)
-    data = request.get_json()
-    
-    collector_user.name = data.get('name', collector_user.name)
-    collector_user.phone = data.get('phone', collector_user.phone)
-    
-    # VALIDACIÓN DE UNICIDAD de Email
-    if data.get('email') and data['email'] != collector_user.email:
-        if User.query.filter(User.email == data['email'], User.id != id).first():
-            return jsonify({"message": "El email ya está en uso."}), 400
-        collector_user.email = data['email']
-
-    try:
-        db.session.commit()
-        return jsonify({"message": "Cobrador actualizado con éxito."}), 200
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"message": f"Error al actualizar: {str(e)}"}), 500
-
-# ENDPOINT 4: PATCH (Activar/Desactivar)
-@admin_bp.route('/collectors/<int:id>/status', methods=['PATCH'])
-@login_required
-def toggle_collector_status_api(id):
-    if not current_user.is_admin:
-         return jsonify({"message": "Acceso no autorizado."}), 403
-         
-    # CONTROL DE SEGURIDAD: Solo cambiar estado de cobradores asignados
-    if not check_assignment(id, current_user.id):
-        return jsonify({"message": "No tiene permiso para cambiar el estado de este cobrador."}), 403
-
-    collector_user = User.query.get_or_404(id)
-    data = request.get_json()
-    new_status = data.get('status')
-    
-    if new_status is None or not isinstance(new_status, bool):
-        return jsonify({"message": "El campo 'status' (booleano) es requerido."}), 400
-        
-    collector_user.status = new_status
-
-    try:
-        db.session.commit()
-        action = "activado" if new_status else "desactivado"
-        return jsonify({"message": f"Cobrador {action} con éxito.", "status": new_status}), 200
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"message": f"Error al actualizar el estado: {str(e)}"}), 500
-
-# ENDPOINT 5: PUT  (Actualizar credenciales)
-@admin_bp.route('/collectors/<int:id>/account', methods=['PUT'])
-@login_required
-def update_collector_credentials_api(id):
-    if not current_user.is_admin:
-         return jsonify({"message": "Acceso no autorizado."}), 403
-         
-    # CONTROL DE SEGURIDAD: Solo modificar credenciales de cobradores asignados
-    if not check_assignment(id, current_user.id):
-        return jsonify({"message": "No tiene permiso para modificar las credenciales de este cobrador."}), 403
-
-    collector_user = User.query.get_or_404(id)
-    data = request.get_json()
-    
-    # VALIDACIÓN DE UNICIDAD de Username
-    if 'username' in data and data['username'] != collector_user.username:
-        if User.query.filter(User.username == data['username'], User.id != id).first():
-            return jsonify({"message": "El nuevo username ya está en uso."}), 400
-        collector_user.username = data['username']
-
-    # HASH DE CONTRASEÑA
-    if 'password' in data and data['password']:
-        collector_user.password_hash = generate_password_hash(data['password'])
-
-    try:
-        db.session.commit()
-        return jsonify({"message": "Credenciales actualizadas con éxito."}), 200
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"message": f"Error al actualizar: {str(e)}"}), 500
-
+    return render_template('admin/clientes_por_cobrador.html',
+                         cobrador=cobrador,
+                         clientes=clientes,
+                         route_name=get_route_name(request.endpoint))
 
 # -------------------------------------------------------------
-# MANEJADORES DE PETICIONES GLOBALES
+# API ENDPOINTS (para AJAX/funcionalidad dinámica)
+# -------------------------------------------------------------
+
+@admin_bp.route('/api/cobradores', methods=['GET'])
+@login_required
+@admin_required
+def get_cobradores_api():
+    """API para obtener cobradores (para AJAX)"""
+    cobradores = get_assigned_collectors(current_user.id).all()
+    activos, inactivos = [], []
+
+    for c in cobradores:
+        customer_count = get_customer_count_by_collector(c.id)
+        
+        datos = {
+            "id": c.id,
+            "name": c.name,
+            "phone": c.phone,
+            "email": c.email,
+            "username": c.username,
+            "assigned_customers_count": customer_count,
+            "status": c.status,
+            "last_connection": c.last_connection.isoformat() if c.last_connection else None
+        }
+        if c.status:
+            activos.append(datos)
+        else:
+            inactivos.append(datos)
+            
+    return jsonify({
+        "active_cobradores": activos, 
+        "inactive_cobradores": inactivos
+    }), 200
+
+# -------------------------------------------------------------
+# MANEJADORES GLOBALES
 # -------------------------------------------------------------
 
 @admin_bp.after_request
 def add_security_headers_admin(response):
-    """
-    Añade encabezados para evitar el caching de las páginas de administración.
-    """
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "0"
@@ -340,4 +345,7 @@ def add_security_headers_admin(response):
 @admin_bp.before_request
 @login_required
 def before_admin_request():
-    pass
+    """Verificación antes de cada request al admin"""
+    if request.endpoint and request.endpoint.startswith('admin.'):
+        if not current_user.is_admin:
+            return "No tienes permisos para acceder a esta página", 403

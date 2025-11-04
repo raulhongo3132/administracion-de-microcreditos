@@ -1,0 +1,84 @@
+{% extends "base_admin.html" %}
+{% block title %}Clientes de {{ cobrador.name }}{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin/cobradores.css') }}">
+{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0">Clientes de {{ cobrador.name }}</h2>
+        <a href="{{ url_for('admin.cobradores') }}" class="btn btn-secondary">
+            ← Volver a Cobradores
+        </a>
+    </div>
+
+    <!-- Barra de búsqueda
+    <div class="d-flex justify-content-end mb-4">
+        <input 
+            type="text" 
+            class="form-control w-25" 
+            id="buscarCliente" 
+            placeholder="Buscar por nombre o teléfono..."
+        >
+    </div>
+     -->
+    {% if clientes %}
+    <div class="card shadow-sm">
+        <div class="card-header bg-light">
+            <h5 class="mb-0 fw-semibold">📋 Lista de Clientes Asignados</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Teléfono</th>
+                            <th>Email</th>
+                            <th>Saldo</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaClientes">
+                        {% for cliente in clientes %}
+                        <tr>
+                            <td>{{ cliente.id }}</td>
+                            <td>{{ cliente.name }}</td>
+                            <td>{{ cliente.phone or '-' }}</td>
+                            <td>{{ cliente.email or '-' }}</td>
+                            <td>{{ cliente.saldo or '0.00' }}</td>
+                            <td>
+                                {% if cliente.activo %}
+                                    <span class="badge bg-success">Activo</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Inactivo</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info mt-3">
+        Este cobrador aún no tiene clientes asignados.
+    </div>
+    {% endif %}
+</div>
+
+<script>
+document.getElementById("buscarCliente").addEventListener("input", function () {
+    const filtro = this.value.toLowerCase();
+    const filas = document.querySelectorAll("#tablaClientes tr");
+    filas.forEach(fila => {
+        const texto = fila.textContent.toLowerCase();
+        fila.style.display = texto.includes(filtro) ? "" : "none";
+    });
+});
+</script>
+{% endblock %}

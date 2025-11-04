@@ -1,103 +1,87 @@
 {% extends "base_admin.html" %}
 {% block title %}{{ route_name }}{% endblock %}
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/admin/registrar_usuario.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin/formularios.css') }}">
 {% endblock %}
 {% block content %}
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="mb-0">Registrar Nuevo Cobrador</h4>
-                </div>
-                <div class="card-body">
-                    <form method="POST" action="">
-                        {{ form.hidden_tag() }}
-                        
-                        <div class="mb-3">
-                            {{ form.name.label(class="form-label") }}
-                            {{ form.name(class="form-control") }}
-                            {% if form.name.errors %}
-                                <div class="text-danger">
-                                    {% for error in form.name.errors %}
-                                        <small>{{ error }}</small>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="mb-3">
-                            {{ form.username.label(class="form-label") }}
-                            {{ form.username(class="form-control") }}
-                            {% if form.username.errors %}
-                                <div class="text-danger">
-                                    {% for error in form.username.errors %}
-                                        <small>{{ error }}</small>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="mb-3">
-                            {{ form.phone.label(class="form-label") }}
-                            {{ form.phone(class="form-control", placeholder="Ej: 1234567890") }}
-                            {% if form.phone.errors %}
-                                <div class="text-danger">
-                                    {% for error in form.phone.errors %}
-                                        <small>{{ error }}</small>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="mb-3">
-                            {{ form.email.label(class="form-label") }}
-                            {{ form.email(class="form-control", placeholder="Ej: ejemplo@ejemplo.mx") }}
-                            {% if form.email.errors %}
-                                <div class="text-danger">
-                                    {% for error in form.email.errors %}
-                                        <small>{{ error }}</small>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="mb-3">
-                            {{ form.rol.label(class="form-label") }}
-                            {{ form.rol(class="form-select") }}
-                            {% if form.rol.errors %}
-                                <div class="text-danger">
-                                    {% for error in form.rol.errors %}
-                                        <small>{{ error }}</small>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="mb-3">
-                            {{ form.password.label(class="form-label") }}
-                            {{ form.password(class="form-control") }}
-                            {% if form.password.errors %}
-                                <div class="text-danger">
-                                    {% for error in form.password.errors %}
-                                        <small>{{ error }}</small>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="d-grid gap-2">
-                            {{ form.submit(class="btn btn-primary") }}
-                        </div>
-                    </form>
-                </div>
+<div class="form-container">
+    <div class="form-content">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Registrar Nuevo Cobrador</h4>
             </div>
-            
-            <div class="text-center mt-3">
-                <a href="{{ url_for('admin.inicio') }}" class="btn btn-secondary">
-                    ← Volver al inicio
-                </a>
+            <div class="card-body">
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="form-group">
+                        {{ form.name.label(class="form-label") }}
+                        {{ form.name(class="form-control", placeholder="Ingrese el nombre completo") }}
+                        {% if form.name.errors %}
+                            <div class="text-danger">
+                                {% for error in form.name.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form.username.label(class="form-label") }}
+                        {{ form.username(class="form-control", placeholder="Ingrese el nombre de usuario") }}
+                        {% if form.username.errors %}
+                            <div class="text-danger">
+                                {% for error in form.username.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form.phone.label(class="form-label") }}
+                        {{ form.phone(class="form-control", placeholder="Ej: 1234567890") }}
+                        {% if form.phone.errors %}
+                            <div class="text-danger">
+                                {% for error in form.phone.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.email.label(class="form-label") }}
+                        {{ form.email(class="form-control", placeholder="Ej: ejemplo@ejemplo.mx") }}
+                        {% if form.email.errors %}
+                            <div class="text-danger">
+                                {% for error in form.email.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Campo oculto para el rol (siempre será collector) -->
+                    <input type="hidden" name="rol" value="collector">
+                    
+                    <div class="form-group">
+                        {{ form.password.label(class="form-label") }}
+                        {{ form.password(class="form-control", placeholder="Mínimo 6 caracteres") }}
+                        {% if form.password.errors %}
+                            <div class="text-danger">
+                                {% for error in form.password.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="button-group">
+                        {{ form.submit(class="btn btn-primary") }}
+                        <a href="{{ url_for('admin.cobradores') }}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

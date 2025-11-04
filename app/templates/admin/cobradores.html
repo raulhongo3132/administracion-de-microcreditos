@@ -1,127 +1,171 @@
 {% extends "base_admin.html" %}
-{% block title %}{{ route_name }}{% endblock %}
+{% block title %}Gestión de Cobradores{% endblock %}
+
 {% block extra_css %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/cobradores.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin/tablas.css') }}">
 {% endblock %}
+
 {% block content %}
-<div class="container-fluid">
+<div class="container-fluid mt-4">
+
     <!-- Encabezado -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <a href="{{ url_for('admin.registrar_cobrador') }}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Registrar Nuevo Usuario
+        <h2 class="fw-bold mb-0">Gestión de Cobradores</h2>
+        <a href="{{ url_for('admin.registrar_cobrador') }}" class="btn btn-dark">
+            <i class="fas fa-plus me-2"></i>Agregar Nuevo Cobrador
         </a>
+    </div>
+
+    <!-- Búsqueda -->
+    <div class="d-flex justify-content-end mb-4">
+        <form method="GET" action="{{ url_for('admin.cobradores') }}" class="d-flex w-25">
+            <input 
+                type="text" 
+                name="q"
+                class="form-control" 
+                placeholder="Buscar por nombre o teléfono..."
+                value="{{ request.args.get('q', '') }}"
+            >
+            <button type="submit" class="btn btn-outline-secondary ms-2">
+                <i class="fas fa-search">buscar</i>
+            </button>
+        </form>
     </div>
 
     <!-- Mensajes Flash -->
     {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            {% endfor %}
-        {% endif %}
+      {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+      {% endif %}
     {% endwith %}
 
-    <!-- Tabla de Usuarios -->
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title mb-0">Lista de Usuarios</h5>
+    <!-- SECCIÓN: Cobradores Activos -->
+    <div class="card shadow-sm mb-5">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-semibold">🔹 Cobradores Activos</h5>
+            <span class="badge bg-success">{{ usuarios|selectattr("status", "equalto", True)|selectattr("rol", "equalto", "collector")|list|length }}</span>
         </div>
-        <div class="card-body">
-            {% if usuarios %}
+        <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                    <thead>
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
                         <tr>
                             <th>ID</th>
                             <th>Nombre</th>
                             <th>Usuario</th>
                             <th>Teléfono</th>
-                            <th>Rol</th>
+                            <th>Email</th>
+                            <th>Clientes</th>
                             <th>Estado</th>
-                            <th>Fecha de Registro</th>
-                            <th>Última Conexión</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for usuario in usuarios %}
+                        {% for usuario in usuarios if usuario.status and usuario.rol == 'collector' %}
                         <tr>
                             <td>{{ usuario.id }}</td>
                             <td>{{ usuario.name }}</td>
                             <td>{{ usuario.username }}</td>
-                            <td>{{ usuario.phone }}</td>
-                            <td>
-                                {% if usuario.rol == 'admin' %}
-                                    <span class="badge bg-danger">Administrador</span>
-                                {% elif usuario.rol == 'collector' %}
-                                    <span class="badge bg-warning">Cobrador</span>
-                                {% else %}
-                                    <span class="badge bg-secondary">Cliente</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if usuario.status %}
-                                    <span class="badge bg-success">Activo</span>
-                                {% else %}
-                                    <span class="badge bg-danger">Inactivo</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if usuario.creation_date %}
-                                    {{ usuario.creation_date.strftime('%d/%m/%Y') }}
-                                {% else %}
-                                    -
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if usuario.last_connection %}
-                                    {{ usuario.last_connection.strftime('%d/%m/%Y %H:%M') }}
-                                {% else %}
-                                    <span class="text-muted">Nunca</span>
-                                {% endif %}
-                            </td>
+                            <td>{{ usuario.phone or '-' }}</td>
+                            <td>{{ usuario.email or '-' }}</td>
+                            <td>{{ usuario.clientes_asignados or 0 }}</td>
+                            <td><span class="badge bg-success">Activo</span></td>
                             <td>
                                 <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-sm btn-outline-primary" title="Editar">
-                                        <i class="fas fa-edit"></i>
+                                    <button type="button" 
+                                            onclick="window.location.href='{{ url_for('admin.clientes_por_cobrador', id=usuario.id) }}'"
+                                            class="btn btn-sm btn-outline-primary" title="Ver Clientes">
+                                        <i class="fas fa-eye me-1"></i>clientes
                                     </button>
-                                    {% if usuario.id != current_user.id %}
-                                        {% if usuario.status %}
-                                            <button type="button" class="btn btn-sm btn-outline-warning" title="Desactivar">
-                                                <i class="fas fa-ban"></i>
-                                            </button>
-                                        {% else %}
-                                            <button type="button" class="btn btn-sm btn-outline-success" title="Activar">
-                                                <i class="fas fa-check"></i>
-                                            </button>
-                                        {% endif %}
-                                        <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    {% else %}
-                                        <span class="text-muted small">Tú</span>
-                                    {% endif %}
+                                    <button type="button" 
+                                            onclick="window.location.href='{{ url_for('admin.editar_cobrador_form', id=usuario.id) }}'"
+                                            class="btn btn-sm btn-outline-warning" title="Editar Datos">
+                                        <i class="fas fa-edit me-1"></i>datos
+                                    </button>
+                                    <button type="button" 
+                                            onclick="window.location.href='{{ url_for('admin.editar_cuenta_cobrador_form', id=usuario.id) }}'"
+                                            class="btn btn-sm btn-outline-secondary" title="Editar Cuenta">
+                                        <i class="fas fa-user-cog me-1"></i>cuenta
+                                    </button>
+                                    <button type="button" 
+                                            onclick="if(confirm('¿Seguro que deseas desactivar a {{ usuario.name }}?')) { window.location.href='{{ url_for('admin.cambiar_estado_cobrador', id=usuario.id, estado='inactivo') }}'; }"
+                                            class="btn btn-sm btn-outline-danger" title="Desactivar">
+                                        <i class="fas fa-ban me-1"></i>desactivar
+                                    </button>
                                 </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center py-4">
+                                <i class="fas fa-users fa-2x text-muted mb-3"></i>
+                                <p class="text-muted mb-0">No hay cobradores activos</p>
                             </td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
-            {% else %}
-            <div class="text-center py-4">
-                <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                <h5>No hay usuarios registrados</h5>
-                <p class="text-muted">Comienza registrando el primer usuario.</p>
-                <a href="{{ url_for('admin.registrar_cobrador') }}" class="btn btn-primary">
-                    Registrar Usuario
-                </a>
-            </div>
-            {% endif %}
         </div>
     </div>
+
+    <!-- SECCIÓN: Cobradores Inactivos -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-semibold">🔸 Cobradores Inactivos</h5>
+            <span class="badge bg-danger">{{ usuarios|selectattr("status", "equalto", False)|selectattr("rol", "equalto", "collector")|list|length }}</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Usuario</th>
+                            <th>Teléfono</th>
+                            <th>Email</th>
+                            <th>Clientes</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for usuario in usuarios if not usuario.status and usuario.rol == 'collector' %}
+                        <tr>
+                            <td>{{ usuario.id }}</td>
+                            <td>{{ usuario.name }}</td>
+                            <td>{{ usuario.username }}</td>
+                            <td>{{ usuario.phone or '-' }}</td>
+                            <td>{{ usuario.email or '-' }}</td>
+                            <td>{{ usuario.clientes_asignados or 0 }}</td>
+                            <td><span class="badge bg-danger">Inactivo</span></td>
+                            <td>
+                                <button type="button" 
+                                    onclick="if(confirm('¿Seguro que deseas reactivar a {{ usuario.name }}?')) { window.location.href='{{ url_for('admin.cambiar_estado_cobrador', id=usuario.id, estado='activo') }}'; }"
+                                    class="btn btn-sm btn-outline-danger" title="Activar">
+                                    <i class="fas fa-ban me-1"></i>activar
+                                </button>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center py-4">
+                                <i class="fas fa-users-slash fa-2x text-muted mb-3"></i>
+                                <p class="text-muted mb-0">No hay cobradores inactivos</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 </div>
 {% endblock %}
