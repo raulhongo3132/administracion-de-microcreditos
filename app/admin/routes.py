@@ -35,11 +35,13 @@ def check_assignment(collector_user_id, admin_user_id):
     ).first()
 
 def get_assigned_collectors(admin_id):
-    """Obtiene todos los cobradores asignados a un admin"""
-    assigned_ids = db.session.query(CollectorAssignment.collector_id).filter(
-        CollectorAssignment.admin_id == admin_id
-    ).subquery()
-    return User.query.filter(User.id.in_(assigned_ids))
+    assigned_ids = (
+        db.session.query(CollectorAssignment.collector_id)
+        .filter(CollectorAssignment.admin_id == admin_id)
+        .subquery()
+    )
+
+    return User.query.filter(User.id.in_(db.select(assigned_ids.c.collector_id)))
 
 def get_customer_count_by_collector(collector_id):
     """Obtiene el número de clientes activos asignados a un cobrador"""
